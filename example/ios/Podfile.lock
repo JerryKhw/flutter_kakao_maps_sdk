@@ -1,0 +1,45 @@
+PODS:
+  - Flutter (1.0.0)
+  - flutter_kakao_maps_sdk (0.1.0):
+    - Flutter
+    - KakaoMapsSDK (= 2.6.1)
+  - fluttertoast (0.0.2):
+    - Flutter
+    - Toast
+  - integration_test (0.0.1):
+    - Flutter
+  - KakaoMapsSDK (2.6.1)
+  - Toast (4.0.0)
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - flutter_kakao_maps_sdk (from `.symlinks/plugins/flutter_kakao_maps_sdk/ios`)
+  - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
+  - integration_test (from `.symlinks/plugins/integration_test/ios`)
+
+SPEC REPOS:
+  trunk:
+    - KakaoMapsSDK
+    - Toast
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  flutter_kakao_maps_sdk:
+    :path: ".symlinks/plugins/flutter_kakao_maps_sdk/ios"
+  fluttertoast:
+    :path: ".symlinks/plugins/fluttertoast/ios"
+  integration_test:
+    :path: ".symlinks/plugins/integration_test/ios"
+
+SPEC CHECKSUMS:
+  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  flutter_kakao_maps_sdk: e13f9f94508839c9853e76729118ab223cd505ed
+  fluttertoast: fafc4fa4d01a6a9e4f772ecd190ffa525e9e2d9c
+  integration_test: 13825b8a9334a850581300559b8839134b124670
+  KakaoMapsSDK: bec5ed06b0a01b17a7f985098738d35357fe80a8
+  Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
+
+PODFILE CHECKSUM: a57f30d18f102dd3ce366b1d62a55ecbef2158e5
+
+COCOAPODS: 1.12.1
