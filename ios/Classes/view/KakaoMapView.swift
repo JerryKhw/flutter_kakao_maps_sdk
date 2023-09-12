@@ -169,8 +169,6 @@ class KakaoMapView: NSObject, FlutterPlatformView, MapControllerDelegate {
         
         let appName = arguments["appName"] as! String
         let viewInfoName = arguments["viewInfoName"] as! String
-        options.appName = appName
-        options.viewInfoName = viewInfoName
         
         mapView?.changeViewInfo(appName: appName, viewInfoName: viewInfoName)
         
@@ -181,7 +179,6 @@ class KakaoMapView: NSObject, FlutterPlatformView, MapControllerDelegate {
         printLog("showOverlay")
         
         let overlay = arguments["overlay"] as! String
-        options.overlay = overlay
         
         mapView?.showOverlay(overlay)
         
@@ -202,7 +199,6 @@ class KakaoMapView: NSObject, FlutterPlatformView, MapControllerDelegate {
         printLog("setEnabled")
         
         let enabled = arguments["enabled"] as! Bool
-        options.enabled = enabled
         
         mapView?.isEnabled = enabled
         
@@ -213,7 +209,6 @@ class KakaoMapView: NSObject, FlutterPlatformView, MapControllerDelegate {
         printLog("setBuildingScale")
         
         let buildingScale = Float(arguments["buildingScale"] as! Double)
-        options.buildingScale = buildingScale
         
         mapView?.buildingScale = buildingScale
         
@@ -232,7 +227,6 @@ class KakaoMapView: NSObject, FlutterPlatformView, MapControllerDelegate {
         printLog("setPadding")
         
         let padding = arguments.toUIEdgeInsets()
-        options.padding = padding
         
         mapView?.setMargins(padding)
         
@@ -243,7 +237,6 @@ class KakaoMapView: NSObject, FlutterPlatformView, MapControllerDelegate {
         printLog("setLogoPosition")
         
         let logoPosition = arguments.toKakaoMapPosition()
-        options.logoPosition = logoPosition
         
         mapView?.setLogoPosition(origin: logoPosition.alignment.toGuiAlignment(), position: CGPoint(x:logoPosition.x, y: logoPosition.y))
         
@@ -254,7 +247,6 @@ class KakaoMapView: NSObject, FlutterPlatformView, MapControllerDelegate {
         printLog("setPoiOptions")
         
         let poiOptions = arguments.toPoiOptions()
-        options.poiOptions = poiOptions
         
         mapView?.poiClickable = poiOptions.clickable
         mapView?.setPoiEnabled(poiOptions.enabled)
@@ -267,7 +259,6 @@ class KakaoMapView: NSObject, FlutterPlatformView, MapControllerDelegate {
         printLog("setCompassOptions")
         
         let compassOptions = arguments.toCompassOptions()
-        options.compassOptions = compassOptions
         
         if(compassOptions.enabled) {
             mapView?.showCompass()
@@ -283,7 +274,6 @@ class KakaoMapView: NSObject, FlutterPlatformView, MapControllerDelegate {
         printLog("setScaleBarOptions")
         
         let scaleBarOptions = arguments.toScaleBarOptions()
-        options.scaleBarOptions = scaleBarOptions
         
         if(scaleBarOptions.enabled) {
             mapView?.showScaleBar()
@@ -400,6 +390,7 @@ class KakaoMapView: NSObject, FlutterPlatformView, MapControllerDelegate {
             mapView?.setScaleBarAutoDisappear(options.scaleBarOptions.autoDisabled)
             mapView?.setScaleBarFadeInOutOption(options.scaleBarOptions.fadeInOutOptions)
             
+            viewMethodChannel.invokeMethod("onMapReady", arguments: nil)
         }
     }
     
