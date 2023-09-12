@@ -243,8 +243,6 @@ internal class KakaoMapView(
 
         val appName = arguments.getString("appName")
         val viewInfoName = arguments.getString("viewInfoName")
-        options.appName = appName
-        options.viewInfoName = viewInfoName
 
         mapView?.changeMapViewInfo(MapViewInfo.from(appName, viewInfoName))
 
@@ -255,7 +253,6 @@ internal class KakaoMapView(
         printLog("showOverlay")
 
         val overlay = MapOverlay.getEnum(arguments.getString("overlay"))
-        options.overlay = overlay
 
         mapView?.showOverlay(overlay)
 
@@ -276,7 +273,6 @@ internal class KakaoMapView(
         printLog("setEnabled")
 
         val enabled = arguments.getBoolean("enabled")
-        options.enabled = enabled
 
         mapView?.isVisible = enabled
 
@@ -287,7 +283,6 @@ internal class KakaoMapView(
         printLog("setBuildingScale")
 
         val buildingScale = arguments.getDouble("buildingScale").toFloat()
-        options.buildingScale = buildingScale
 
         mapView?.buildingHeightScale = buildingScale
 
@@ -313,7 +308,6 @@ internal class KakaoMapView(
         printLog("setPadding")
 
         val padding = arguments.toPadding()
-        options.padding = padding
 
         mapView?.setPadding(
             padding.left.px,
@@ -329,7 +323,6 @@ internal class KakaoMapView(
         printLog("setLogoPosition")
 
         val logoPosition = arguments.toKakaoMapPosition()
-        options.logoPosition = logoPosition
 
         mapView?.logo?.setPosition(
             logoPosition.alignment.toMapGravity(),
@@ -344,7 +337,6 @@ internal class KakaoMapView(
         printLog("setPoiOptions")
 
         val poiOptions = arguments.toPoiOptions()
-        options.poiOptions = poiOptions
 
         mapView?.setPoiClickable(poiOptions.clickable)
         mapView?.setPoiVisible(poiOptions.enabled)
@@ -357,7 +349,6 @@ internal class KakaoMapView(
         printLog("setCompassOptions")
 
         val compassOptions = arguments.toCompassOptions()
-        options.compassOptions = compassOptions
 
         compass = mapView?.compass
         compass?.let { compass ->
@@ -380,7 +371,6 @@ internal class KakaoMapView(
         printLog("setScaleBarOptions")
 
         val scaleBarOptions = arguments.toScaleBarOptions()
-        options.scaleBarOptions = scaleBarOptions
 
         scaleBar = mapView?.scaleBar
         scaleBar?.let { scaleBar ->
@@ -444,7 +434,7 @@ internal class KakaoMapView(
                         mapView.setPoiLanguage(options.language)
                         // BuildingScale
                         mapView.buildingHeightScale = options.buildingScale
-                        // Pading
+                        // Padding
                         mapView.setPadding(
                             options.padding.left.px,
                             options.padding.top.px,
@@ -495,6 +485,8 @@ internal class KakaoMapView(
                                 options.scaleBarOptions.fadeInOutOptions.retentionTime
                             )
                         }
+
+                        viewMethodChannel.invokeMethod("onMapReady", null)
                     }
                 }
 

@@ -2,11 +2,24 @@ part of flutter_kakao_maps_sdk;
 
 class KakaoMapController {
   final int _id;
+  final void Function(KakaoMapController controller)? _onMapReady;
 
   late final MethodChannel _viewMethodChannel;
 
-  KakaoMapController(this._id) {
+  KakaoMapController(this._id, this._onMapReady) {
     _viewMethodChannel = MethodChannel(_createViewMethodChannelName(_id), const JSONMethodCodec());
+
+    _viewMethodChannel.setMethodCallHandler((call) async {
+      switch (call.method) {
+        case "onMapReady":
+          if (_onMapReady != null) {
+            _onMapReady!(this);
+          }
+          break;
+        default:
+          break;
+      }
+    });
   }
 
   void dispose() {

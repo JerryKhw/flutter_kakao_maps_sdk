@@ -25,11 +25,7 @@ class _KakaoMapViewState extends State<KakaoMapView> {
   }
 
   void _onPlatformViewCreated(int id) {
-    _controller = KakaoMapController(id);
-
-    if (widget.onMapReady != null) {
-      widget.onMapReady!(_controller!);
-    }
+    _controller = KakaoMapController(id, widget.onMapReady);
   }
 
   @override
