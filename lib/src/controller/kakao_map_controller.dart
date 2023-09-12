@@ -13,6 +13,94 @@ class KakaoMapController {
     _viewMethodChannel.invokeMethod("dispose");
   }
 
+  // Camera
+  Future<void> moveCamera({
+    KakaoMapPoint? target,
+    int? zoomLevel,
+    double? rotation,
+    double? tilt,
+  }) async {
+    Map<String, dynamic> map = {};
+
+    if (target != null) {
+      map["target"] = target.toMap();
+    }
+
+    if (zoomLevel != null) {
+      map["zoomLevel"] = zoomLevel;
+    }
+
+    if (rotation != null) {
+      map["rotation"] = rotation;
+    }
+
+    if (tilt != null) {
+      map["tilt"] = tilt;
+    }
+
+    await _viewMethodChannel.invokeMethod("moveCamera", map);
+  }
+
+  Future<void> animateCamera({
+    KakaoMapPoint? target,
+    int? zoomLevel,
+    double? rotation,
+    double? tilt,
+    CameraAnimationOptions cameraAnimationOptions = const CameraAnimationOptions(),
+  }) async {
+    Map<String, dynamic> map = {
+      "cameraAnimationOptions": cameraAnimationOptions.toMap(),
+    };
+
+    if (target != null) {
+      map["target"] = target.toMap();
+    }
+
+    if (zoomLevel != null) {
+      map["zoomLevel"] = zoomLevel;
+    }
+
+    if (rotation != null) {
+      map["rotation"] = rotation;
+    }
+
+    if (tilt != null) {
+      map["tilt"] = tilt;
+    }
+
+    await _viewMethodChannel.invokeMethod("animateCamera", map);
+  }
+
+  Future<void> moveCameraTransform({
+    KakaoMapPoint point = const KakaoMapPoint(longitude: 0, latitude: 0),
+    double height = 0,
+    double rotation = 0,
+    double tilt = 0,
+  }) async {
+    await _viewMethodChannel.invokeMethod("moveCameraTransform", {
+      "point": point.toMap(),
+      "height": height,
+      "rotation": rotation,
+      "tilt": tilt,
+    });
+  }
+
+  Future<void> animateCameraTransform({
+    KakaoMapPoint point = const KakaoMapPoint(longitude: 0, latitude: 0),
+    double height = 0,
+    double rotation = 0,
+    double tilt = 0,
+    CameraAnimationOptions cameraAnimationOptions = const CameraAnimationOptions(),
+  }) async {
+    await _viewMethodChannel.invokeMethod("animateCameraTransform", {
+      "point": point.toMap(),
+      "height": height,
+      "rotation": rotation,
+      "tilt": tilt,
+      "cameraAnimationOptions": cameraAnimationOptions.toMap(),
+    });
+  }
+
   // ViewInfo
   Future<void> setViewInfo({
     String appName = "openmap",

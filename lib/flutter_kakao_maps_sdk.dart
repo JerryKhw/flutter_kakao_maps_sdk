@@ -46,6 +46,8 @@ part 'src/model/fade_in_out_options.dart';
 
 part 'src/model/scale_bar_options.dart';
 
+part 'src/model/camera_animation_options.dart';
+
 part 'src/model/kakao_map_options.dart';
 
 // View

@@ -1,6 +1,6 @@
 PODS:
   - Flutter (1.0.0)
-  - flutter_kakao_maps_sdk (0.1.0):
+  - flutter_kakao_maps_sdk (0.2.1):
     - Flutter
     - KakaoMapsSDK (= 2.6.1)
   - fluttertoast (0.0.2):
@@ -34,7 +34,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
-  flutter_kakao_maps_sdk: e13f9f94508839c9853e76729118ab223cd505ed
+  flutter_kakao_maps_sdk: 00819508d8942b499104740a8a50ca83c950014f
   fluttertoast: fafc4fa4d01a6a9e4f772ecd190ffa525e9e2d9c
   integration_test: 13825b8a9334a850581300559b8839134b124670
   KakaoMapsSDK: bec5ed06b0a01b17a7f985098738d35357fe80a8
