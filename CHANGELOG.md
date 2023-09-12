@@ -1,3 +1,7 @@
+## 0.2.2
+
+- refactor: onMapReady 방식 수정
+
 ## 0.2.1
 
 - update: README.md
