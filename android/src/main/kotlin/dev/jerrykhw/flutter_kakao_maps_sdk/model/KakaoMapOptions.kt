@@ -4,6 +4,7 @@ import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapOverlay
 import com.kakao.vectormap.Padding
 import com.kakao.vectormap.PoiScale
+import com.kakao.vectormap.camera.CameraAnimation
 import dev.jerrykhw.flutter_kakao_maps_sdk.enum.KakaoMapAlignment
 import org.json.JSONObject
 
@@ -73,5 +74,13 @@ fun JSONObject.toPadding(): Padding {
         this.getInt("top"),
         this.getInt("right"),
         this.getInt("bottom"),
+    )
+}
+
+fun JSONObject.toCameraAnimation(): CameraAnimation {
+    return CameraAnimation.from(
+        this.getInt("durationInMillis"),
+        this.getBoolean("autoElevation"),
+        this.getBoolean("consecutive"),
     )
 }

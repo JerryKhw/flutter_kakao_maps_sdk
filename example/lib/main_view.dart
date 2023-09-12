@@ -3,6 +3,7 @@ import 'package:flutter_kakao_maps_sdk_example/map_building_scale_view.dart';
 import 'package:flutter_kakao_maps_sdk_example/map_compass_view.dart';
 import 'package:flutter_kakao_maps_sdk_example/map_enabled_view.dart';
 import 'package:flutter_kakao_maps_sdk_example/map_logo_view.dart';
+import 'package:flutter_kakao_maps_sdk_example/map_move_view.dart';
 import 'package:flutter_kakao_maps_sdk_example/map_overlay_view.dart';
 import 'package:flutter_kakao_maps_sdk_example/map_poi_view.dart';
 import 'package:flutter_kakao_maps_sdk_example/map_scale_bar_view.dart';
@@ -63,6 +64,10 @@ class MainView extends StatelessWidget {
                   MainItem(
                     "지도 축척",
                     targetView: MapScaleBarView(),
+                  ),
+                  MainItem(
+                    "지도 이동",
+                    targetView: MapMoveView(),
                   ),
                 ],
               ),

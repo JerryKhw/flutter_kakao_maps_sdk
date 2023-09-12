@@ -41,6 +41,14 @@ extension NSDictionary {
         return MapPoint(longitude: self["longitude"] as! Double, latitude: self["latitude"] as! Double)
     }
     
+    func toCameraTransformDelta() -> CameraTransformDelta {
+        return CameraTransformDelta(deltaLon: self["longitude"] as! Double, deltaLat: self["latitude"] as! Double)
+    }
+    
+    func toCameraAnimationOptions() -> CameraAnimationOptions {
+        return CameraAnimationOptions(autoElevation: ObjCBool(self["autoElevation"] as! Bool), consecutive: ObjCBool(self["consecutive"] as! Bool), durationInMillis: UInt(self["durationInMillis"] as! Int))
+    }
+    
     func toUIEdgeInsets() -> UIEdgeInsets {
         return UIEdgeInsets(top: self["top"] as! Double, left: self["left"] as! Double, bottom: self["bottom"] as! Double, right: self["right"] as! Double)
     }

@@ -20,6 +20,10 @@ class KakaoMapView: NSObject, FlutterPlatformView, MapControllerDelegate {
     private func viewMethodCallHandler(call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
         case "dispose": dispose(onSuccess: result)
+        case "moveCamera": moveCamera(arguments: call.arguments as! NSDictionary, onSuccess: result)
+        case "animateCamera": animateCamera(arguments: call.arguments as! NSDictionary, onSuccess: result)
+        case "moveCameraTransform": moveCameraTransform(arguments: call.arguments as! NSDictionary, onSuccess: result)
+        case "animateCameraTransform": animateCameraTransform(arguments: call.arguments as! NSDictionary, onSuccess: result)
         case "setViewInfo": setViewInfo(arguments: call.arguments as! NSDictionary, onSuccess: result)
         case "showOverlay": showOverlay(arguments: call.arguments as! NSDictionary, onSuccess: result)
         case "hideOverlay": hideOverlay(arguments: call.arguments as! NSDictionary, onSuccess: result)
@@ -43,6 +47,119 @@ class KakaoMapView: NSObject, FlutterPlatformView, MapControllerDelegate {
         mapController.stopEngine()
         
         viewMethodChannel.setMethodCallHandler(nil)
+        
+        onSuccess(nil)
+    }
+    
+    func moveCamera(arguments: NSDictionary, onSuccess: @escaping (Any?) -> ()) {
+        printLog("moveCamera")
+        
+        if let mapView = self.mapView {
+            let cameraPosition = CameraUpdate.make(mapView: mapView).cameraPosition!
+            var cameraTarget = cameraPosition.targetPoint
+            var cameraZoomLevel = mapView.zoomLevel
+            var cameraRotation = cameraPosition.rotation
+            var cameraTilt = cameraPosition.tilt
+            
+            let target = arguments["target"] as? NSDictionary
+            if let target = target {
+                cameraTarget = target.toMapPoint()
+            }
+            
+            let zoomLevel = arguments["zoomLevel"] as? Int
+            if let zoomLevel = zoomLevel {
+                cameraZoomLevel = zoomLevel
+            }
+            
+            let rotation = arguments["rotation"] as? Double
+            if let rotation = rotation {
+                cameraRotation = rotation
+            }
+            
+            let tilt = arguments["tilt"] as? Double
+            if let tilt = tilt {
+                cameraTilt = tilt
+            }
+            
+            let cameraUpdate = CameraUpdate.make(target: cameraTarget, zoomLevel: cameraZoomLevel, rotation: cameraRotation, tilt: cameraTilt, mapView: mapView)
+            
+            mapView.moveCamera(cameraUpdate)
+        }
+        
+        onSuccess(nil)
+    }
+    
+    func animateCamera(arguments: NSDictionary, onSuccess: @escaping (Any?) -> ()) {
+        printLog("animateCamera")
+        
+        if let mapView = self.mapView {
+            let cameraPosition = CameraUpdate.make(mapView: mapView).cameraPosition!
+            var cameraTarget = cameraPosition.targetPoint
+            var cameraZoomLevel = mapView.zoomLevel
+            var cameraRotation = cameraPosition.rotation
+            var cameraTilt = cameraPosition.tilt
+            
+            let target = arguments["target"] as? NSDictionary
+            if let target = target {
+                cameraTarget = target.toMapPoint()
+            }
+            
+            let zoomLevel = arguments["zoomLevel"] as? Int
+            if let zoomLevel = zoomLevel {
+                cameraZoomLevel = zoomLevel
+            }
+            
+            let rotation = arguments["rotation"] as? Double
+            if let rotation = rotation {
+                cameraRotation = rotation
+            }
+            
+            let tilt = arguments["tilt"] as? Double
+            if let tilt = tilt {
+                cameraTilt = tilt
+            }
+            
+            let cameraAnimationOptions = (arguments["cameraAnimationOptions"] as! NSDictionary).toCameraAnimationOptions()
+            
+            let cameraUpdate = CameraUpdate.make(target: cameraTarget, zoomLevel: cameraZoomLevel, rotation: cameraRotation, tilt: cameraTilt, mapView: mapView)
+            
+            mapView.animateCamera(cameraUpdate: cameraUpdate, options: cameraAnimationOptions)
+        }
+        
+        onSuccess(nil)
+    }
+    
+    func moveCameraTransform(arguments: NSDictionary, onSuccess: @escaping (Any?) -> ()) {
+        printLog("moveCameraTransform")
+        
+        if let mapView = self.mapView {
+            let point = (arguments["point"] as! NSDictionary).toCameraTransformDelta()
+            let height = arguments["height"] as! Double
+            let rotation = arguments["rotation"] as! Double
+            let tilt = arguments["tilt"] as! Double
+            
+            let cameraUpdate = CameraUpdate.make(transform: CameraTransform(deltaPos: point, deltaHeight: height, deltaRotation: rotation, deltaTilt: tilt))
+            
+            mapView.moveCamera(cameraUpdate)
+        }
+        
+        onSuccess(nil)
+    }
+    
+    func animateCameraTransform(arguments: NSDictionary, onSuccess: @escaping (Any?) -> ()) {
+        printLog("animateCameraTransform")
+        
+        if let mapView = self.mapView {
+            let point = (arguments["point"] as! NSDictionary).toCameraTransformDelta()
+            let height = arguments["height"] as! Double
+            let rotation = arguments["rotation"] as! Double
+            let tilt = arguments["tilt"] as! Double
+            let cameraAnimationOptions = (arguments["cameraAnimationOptions"] as! NSDictionary).toCameraAnimationOptions()
+            
+            let cameraUpdate = CameraUpdate.make(transform: CameraTransform(deltaPos: point, deltaHeight: height, deltaRotation: rotation, deltaTilt: tilt))
+            
+            mapView.animateCamera(cameraUpdate: cameraUpdate, options: cameraAnimationOptions)
+        }
         
         onSuccess(nil)
     }
@@ -282,6 +399,7 @@ class KakaoMapView: NSObject, FlutterPlatformView, MapControllerDelegate {
             mapView?.setScaleBarPosition(origin: options.scaleBarOptions.position.alignment.toGuiAlignment(), position: CGPoint(x: options.scaleBarOptions.position.x, y: options.scaleBarOptions.position.y))
             mapView?.setScaleBarAutoDisappear(options.scaleBarOptions.autoDisabled)
             mapView?.setScaleBarFadeInOutOption(options.scaleBarOptions.fadeInOutOptions)
+            
         }
     }
     
