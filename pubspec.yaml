@@ -1,6 +1,6 @@
 name: flutter_kakao_maps_sdk
 description: KakaoMapsSDK for Flutter
-version: 0.1.0
+version: 0.2.1
 homepage: https://github.com/JerryKhw/flutter_kakao_maps_sdk
 
 environment:
