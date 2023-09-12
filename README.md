@@ -2,6 +2,8 @@
 
 KakaoMapsSDK for Flutter
 
+⚠️ 현재 개발 진행중인 패키지입니다.
+
 ## Requirements
 
 - Dart sdk: ">=3.1.0 <4.0.0"
@@ -77,3 +79,12 @@ $ flutter pub add flutter_kakao_maps_sdk
    KAKAO_APP_KEY : KakaoMapsSDK 사용을 위해서 필수로 입력해야 하는 필드입니다. 발급받은 네이티브 앱 키를 해당 필드에 등록합니다.
 
    KAKAO_PHASE : 테스트를 위해 phase별로 등록한 앱은 앱의 phase 정보를 해당 필드에 등록합니다. alpha, beta, sandbox중 하나를 해당 필드에 등록합니다. 예를 들어, https://sandbox-developers.kakao.com 의 경우 KAKAO_PHASE 필드에 sandbox 로 명시합니다. real인 경우, 공란으로 둡니다.
+
+3. 프로모션 디스플레이 설정 (선택)
+
+   ProMotion Display가 지원되는 기기에 대해서만 프로모션이 동작합니다. `Info.plist` 에 아래와 같은 필드를 추가합니다.
+
+   ```xml
+   <key>CADisableMinimumFrameDurationOnPhone</key>
+   <true/>
+   ```
