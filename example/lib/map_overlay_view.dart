@@ -27,56 +27,64 @@ class _MapOverlayViewState extends State<MapOverlayView> {
               actions: [
                 CupertinoActionSheetAction(
                   onPressed: () async {
-                    await kakaoMapController.showOverlay(overlay: KakaoMapOverlay.hybrid);
+                    await kakaoMapController.showOverlay(
+                        overlay: KakaoMapOverlay.hybrid);
                     if (context.mounted) Navigator.pop(context);
                   },
                   child: const Text("SHOW HYBRID"),
                 ),
                 CupertinoActionSheetAction(
                   onPressed: () async {
-                    await kakaoMapController.hideOverlay(overlay: KakaoMapOverlay.hybrid);
+                    await kakaoMapController.hideOverlay(
+                        overlay: KakaoMapOverlay.hybrid);
                     if (context.mounted) Navigator.pop(context);
                   },
                   child: const Text("HIDE HYBRID"),
                 ),
                 CupertinoActionSheetAction(
                   onPressed: () async {
-                    await kakaoMapController.showOverlay(overlay: KakaoMapOverlay.roadviewLine);
+                    await kakaoMapController.showOverlay(
+                        overlay: KakaoMapOverlay.roadviewLine);
                     if (context.mounted) Navigator.pop(context);
                   },
                   child: const Text("SHOW ROADVIEWLINE"),
                 ),
                 CupertinoActionSheetAction(
                   onPressed: () async {
-                    await kakaoMapController.hideOverlay(overlay: KakaoMapOverlay.roadviewLine);
+                    await kakaoMapController.hideOverlay(
+                        overlay: KakaoMapOverlay.roadviewLine);
                     if (context.mounted) Navigator.pop(context);
                   },
                   child: const Text("HIDE ROADVIEWLINE"),
                 ),
                 CupertinoActionSheetAction(
                   onPressed: () async {
-                    await kakaoMapController.showOverlay(overlay: KakaoMapOverlay.hillshading);
+                    await kakaoMapController.showOverlay(
+                        overlay: KakaoMapOverlay.hillshading);
                     if (context.mounted) Navigator.pop(context);
                   },
                   child: const Text("SHOW HILLSHADING"),
                 ),
                 CupertinoActionSheetAction(
                   onPressed: () async {
-                    await kakaoMapController.hideOverlay(overlay: KakaoMapOverlay.hillshading);
+                    await kakaoMapController.hideOverlay(
+                        overlay: KakaoMapOverlay.hillshading);
                     if (context.mounted) Navigator.pop(context);
                   },
                   child: const Text("HIDE HILLSHADING"),
                 ),
                 CupertinoActionSheetAction(
                   onPressed: () async {
-                    await kakaoMapController.showOverlay(overlay: KakaoMapOverlay.bicycleRoad);
+                    await kakaoMapController.showOverlay(
+                        overlay: KakaoMapOverlay.bicycleRoad);
                     if (context.mounted) Navigator.pop(context);
                   },
                   child: const Text("SHOW BICYCLEROAD"),
                 ),
                 CupertinoActionSheetAction(
                   onPressed: () async {
-                    await kakaoMapController.hideOverlay(overlay: KakaoMapOverlay.bicycleRoad);
+                    await kakaoMapController.hideOverlay(
+                        overlay: KakaoMapOverlay.bicycleRoad);
                     if (context.mounted) Navigator.pop(context);
                   },
                   child: const Text("HIDE BICYCLEROAD"),

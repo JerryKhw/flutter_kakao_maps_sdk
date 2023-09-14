@@ -27,7 +27,9 @@ class _MapLogoViewState extends State<MapLogoView> {
               actions: [
                 CupertinoActionSheetAction(
                   onPressed: () async {
-                    await kakaoMapController.setLogoPosition(logoPosition: const KakaoMapPosition(alignment: KakaoMapAlignment.topLeft, x: 0, y: 0));
+                    await kakaoMapController.setLogoPosition(
+                        logoPosition: const KakaoMapPosition(
+                            alignment: KakaoMapAlignment.topLeft, x: 0, y: 0));
                     await kakaoMapController.refresh();
                     if (context.mounted) Navigator.pop(context);
                   },
@@ -36,7 +38,10 @@ class _MapLogoViewState extends State<MapLogoView> {
                 CupertinoActionSheetAction(
                   onPressed: () async {
                     await kakaoMapController.setLogoPosition(
-                        logoPosition: const KakaoMapPosition(alignment: KakaoMapAlignment.topCenter, x: 0, y: 0));
+                        logoPosition: const KakaoMapPosition(
+                            alignment: KakaoMapAlignment.topCenter,
+                            x: 0,
+                            y: 0));
                     await kakaoMapController.refresh();
                     if (context.mounted) Navigator.pop(context);
                   },
@@ -44,7 +49,9 @@ class _MapLogoViewState extends State<MapLogoView> {
                 ),
                 CupertinoActionSheetAction(
                   onPressed: () async {
-                    await kakaoMapController.setLogoPosition(logoPosition: const KakaoMapPosition(alignment: KakaoMapAlignment.topRight, x: 0, y: 0));
+                    await kakaoMapController.setLogoPosition(
+                        logoPosition: const KakaoMapPosition(
+                            alignment: KakaoMapAlignment.topRight, x: 0, y: 0));
                     await kakaoMapController.refresh();
                     if (context.mounted) Navigator.pop(context);
                   },
@@ -53,7 +60,10 @@ class _MapLogoViewState extends State<MapLogoView> {
                 CupertinoActionSheetAction(
                   onPressed: () async {
                     await kakaoMapController.setLogoPosition(
-                        logoPosition: const KakaoMapPosition(alignment: KakaoMapAlignment.centerLeft, x: 0, y: 0));
+                        logoPosition: const KakaoMapPosition(
+                            alignment: KakaoMapAlignment.centerLeft,
+                            x: 0,
+                            y: 0));
                     await kakaoMapController.refresh();
                     if (context.mounted) Navigator.pop(context);
                   },
@@ -61,7 +71,9 @@ class _MapLogoViewState extends State<MapLogoView> {
                 ),
                 CupertinoActionSheetAction(
                   onPressed: () async {
-                    await kakaoMapController.setLogoPosition(logoPosition: const KakaoMapPosition(alignment: KakaoMapAlignment.center, x: 0, y: 0));
+                    await kakaoMapController.setLogoPosition(
+                        logoPosition: const KakaoMapPosition(
+                            alignment: KakaoMapAlignment.center, x: 0, y: 0));
                     await kakaoMapController.refresh();
                     if (context.mounted) Navigator.pop(context);
                   },
@@ -70,7 +82,10 @@ class _MapLogoViewState extends State<MapLogoView> {
                 CupertinoActionSheetAction(
                   onPressed: () async {
                     await kakaoMapController.setLogoPosition(
-                        logoPosition: const KakaoMapPosition(alignment: KakaoMapAlignment.centerRight, x: 0, y: 0));
+                        logoPosition: const KakaoMapPosition(
+                            alignment: KakaoMapAlignment.centerRight,
+                            x: 0,
+                            y: 0));
                     await kakaoMapController.refresh();
                     if (context.mounted) Navigator.pop(context);
                   },
@@ -79,7 +94,10 @@ class _MapLogoViewState extends State<MapLogoView> {
                 CupertinoActionSheetAction(
                   onPressed: () async {
                     await kakaoMapController.setLogoPosition(
-                        logoPosition: const KakaoMapPosition(alignment: KakaoMapAlignment.bottomLeft, x: 0, y: 0));
+                        logoPosition: const KakaoMapPosition(
+                            alignment: KakaoMapAlignment.bottomLeft,
+                            x: 0,
+                            y: 0));
                     await kakaoMapController.refresh();
                     if (context.mounted) Navigator.pop(context);
                   },
@@ -88,7 +106,10 @@ class _MapLogoViewState extends State<MapLogoView> {
                 CupertinoActionSheetAction(
                   onPressed: () async {
                     await kakaoMapController.setLogoPosition(
-                        logoPosition: const KakaoMapPosition(alignment: KakaoMapAlignment.bottomCenter, x: 0, y: 0));
+                        logoPosition: const KakaoMapPosition(
+                            alignment: KakaoMapAlignment.bottomCenter,
+                            x: 0,
+                            y: 0));
                     await kakaoMapController.refresh();
                     if (context.mounted) Navigator.pop(context);
                   },
@@ -97,7 +118,10 @@ class _MapLogoViewState extends State<MapLogoView> {
                 CupertinoActionSheetAction(
                   onPressed: () async {
                     await kakaoMapController.setLogoPosition(
-                        logoPosition: const KakaoMapPosition(alignment: KakaoMapAlignment.bottomRight, x: 0, y: 0));
+                        logoPosition: const KakaoMapPosition(
+                            alignment: KakaoMapAlignment.bottomRight,
+                            x: 0,
+                            y: 0));
                     await kakaoMapController.refresh();
                     if (context.mounted) Navigator.pop(context);
                   },

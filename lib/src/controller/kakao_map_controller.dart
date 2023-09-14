@@ -7,7 +7,8 @@ class KakaoMapController {
   late final MethodChannel _viewMethodChannel;
 
   KakaoMapController(this._id, this._onMapReady) {
-    _viewMethodChannel = MethodChannel(_createViewMethodChannelName(_id), const JSONMethodCodec());
+    _viewMethodChannel = MethodChannel(
+        _createViewMethodChannelName(_id), const JSONMethodCodec());
 
     _viewMethodChannel.setMethodCallHandler((call) async {
       switch (call.method) {
@@ -59,7 +60,8 @@ class KakaoMapController {
     int? zoomLevel,
     double? rotation,
     double? tilt,
-    CameraAnimationOptions cameraAnimationOptions = const CameraAnimationOptions(),
+    CameraAnimationOptions cameraAnimationOptions =
+        const CameraAnimationOptions(),
   }) async {
     Map<String, dynamic> map = {
       "cameraAnimationOptions": cameraAnimationOptions.toMap(),
@@ -103,7 +105,8 @@ class KakaoMapController {
     double height = 0,
     double rotation = 0,
     double tilt = 0,
-    CameraAnimationOptions cameraAnimationOptions = const CameraAnimationOptions(),
+    CameraAnimationOptions cameraAnimationOptions =
+        const CameraAnimationOptions(),
   }) async {
     await _viewMethodChannel.invokeMethod("animateCameraTransform", {
       "point": point.toMap(),
@@ -177,7 +180,8 @@ class KakaoMapController {
 
   // Padding
   Future<EdgeInsets> getPadding() async {
-    final result = await _viewMethodChannel.invokeMethod("getPadding") as Map<String, dynamic>;
+    final result = await _viewMethodChannel.invokeMethod("getPadding")
+        as Map<String, dynamic>;
 
     return EdgeInsets.fromLTRB(
       result["left"].toDouble(),

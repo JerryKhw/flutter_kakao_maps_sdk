@@ -95,7 +95,8 @@ class MainItem extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: ElevatedButton(
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => targetView));
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => targetView));
         },
         child: Text(text),
       ),

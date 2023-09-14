@@ -28,7 +28,8 @@ class _MapMoveViewState extends State<MapMoveView> {
                 CupertinoActionSheetAction(
                   onPressed: () async {
                     await kakaoMapController.moveCamera(
-                      target: const KakaoMapPoint(longitude: 126.972591728, latitude: 37.552987017),
+                      target: const KakaoMapPoint(
+                          longitude: 126.972591728, latitude: 37.552987017),
                     );
                     // await kakaoMapController.animateCamera(
                     //   target: const KakaoMapPoint(longitude: 126.972591728, latitude: 37.552987017),
@@ -40,7 +41,8 @@ class _MapMoveViewState extends State<MapMoveView> {
                 CupertinoActionSheetAction(
                   onPressed: () async {
                     await kakaoMapController.moveCamera(
-                      target: const KakaoMapPoint(longitude: 129.041418419, latitude: 35.115078556),
+                      target: const KakaoMapPoint(
+                          longitude: 129.041418419, latitude: 35.115078556),
                     );
                     // await kakaoMapController.animateCamera(
                     //   target: const KakaoMapPoint(longitude: 129.041418419, latitude: 35.115078556),
@@ -52,7 +54,8 @@ class _MapMoveViewState extends State<MapMoveView> {
                 CupertinoActionSheetAction(
                   onPressed: () async {
                     await kakaoMapController.moveCameraTransform(
-                      point: const KakaoMapPoint(longitude: 0, latitude: 0.000898),
+                      point:
+                          const KakaoMapPoint(longitude: 0, latitude: 0.000898),
                     );
                     // await kakaoMapController.animateCameraTransform(
                     //   point: const KakaoMapPoint(longitude: 0, latitude: 0.000898),
@@ -64,7 +67,8 @@ class _MapMoveViewState extends State<MapMoveView> {
                 CupertinoActionSheetAction(
                   onPressed: () async {
                     await kakaoMapController.moveCameraTransform(
-                      point: const KakaoMapPoint(longitude: 0, latitude: -0.000898),
+                      point: const KakaoMapPoint(
+                          longitude: 0, latitude: -0.000898),
                     );
                     // await kakaoMapController.animateCameraTransform(
                     //   point: const KakaoMapPoint(longitude: 0, latitude: -0.000898),
@@ -76,7 +80,8 @@ class _MapMoveViewState extends State<MapMoveView> {
                 CupertinoActionSheetAction(
                   onPressed: () async {
                     await kakaoMapController.moveCameraTransform(
-                      point: const KakaoMapPoint(longitude: -0.000898, latitude: 0),
+                      point: const KakaoMapPoint(
+                          longitude: -0.000898, latitude: 0),
                     );
                     // await kakaoMapController.animateCameraTransform(
                     //   point: const KakaoMapPoint(longitude: -0.000898, latitude: 0),
@@ -88,7 +93,8 @@ class _MapMoveViewState extends State<MapMoveView> {
                 CupertinoActionSheetAction(
                   onPressed: () async {
                     await kakaoMapController.moveCameraTransform(
-                      point: const KakaoMapPoint(longitude: 0.000898, latitude: 0),
+                      point:
+                          const KakaoMapPoint(longitude: 0.000898, latitude: 0),
                     );
                     // await kakaoMapController.animateCameraTransform(
                     //   point: const KakaoMapPoint(longitude: 0.000898, latitude: 0),

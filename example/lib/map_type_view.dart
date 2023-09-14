@@ -27,14 +27,16 @@ class _MapTypeViewState extends State<MapTypeView> {
               actions: [
                 CupertinoActionSheetAction(
                   onPressed: () async {
-                    await kakaoMapController.setViewInfo(viewInfoName: KakaoMapViewInfo.map);
+                    await kakaoMapController.setViewInfo(
+                        viewInfoName: KakaoMapViewInfo.map);
                     if (context.mounted) Navigator.pop(context);
                   },
                   child: const Text("MAP"),
                 ),
                 CupertinoActionSheetAction(
                   onPressed: () async {
-                    await kakaoMapController.setViewInfo(viewInfoName: KakaoMapViewInfo.skyview);
+                    await kakaoMapController.setViewInfo(
+                        viewInfoName: KakaoMapViewInfo.skyview);
                     if (context.mounted) Navigator.pop(context);
                   },
                   child: const Text("SKYVIEW"),

@@ -27,42 +27,52 @@ class _MapPoiViewState extends State<MapPoiView> {
               actions: [
                 CupertinoActionSheetAction(
                   onPressed: () async {
-                    await kakaoMapController.setPoiOptions(poiOptions: const PoiOptions());
+                    await kakaoMapController.setPoiOptions(
+                        poiOptions: const PoiOptions());
                     if (context.mounted) Navigator.pop(context);
                   },
                   child: const Text("ENABLED"),
                 ),
                 CupertinoActionSheetAction(
                   onPressed: () async {
-                    await kakaoMapController.setPoiOptions(poiOptions: const PoiOptions(enabled: false));
+                    await kakaoMapController.setPoiOptions(
+                        poiOptions: const PoiOptions(enabled: false));
                     if (context.mounted) Navigator.pop(context);
                   },
                   child: const Text("DISABLED"),
                 ),
                 CupertinoActionSheetAction(
                   onPressed: () async {
-                    await kakaoMapController.setPoiOptions(poiOptions: const PoiOptions(scale: KakaoMapPoiScale.small));
+                    await kakaoMapController.setPoiOptions(
+                        poiOptions:
+                            const PoiOptions(scale: KakaoMapPoiScale.small));
                     if (context.mounted) Navigator.pop(context);
                   },
                   child: const Text("SMALL"),
                 ),
                 CupertinoActionSheetAction(
                   onPressed: () async {
-                    await kakaoMapController.setPoiOptions(poiOptions: const PoiOptions(scale: KakaoMapPoiScale.regular));
+                    await kakaoMapController.setPoiOptions(
+                        poiOptions:
+                            const PoiOptions(scale: KakaoMapPoiScale.regular));
                     if (context.mounted) Navigator.pop(context);
                   },
                   child: const Text("REGULAR"),
                 ),
                 CupertinoActionSheetAction(
                   onPressed: () async {
-                    await kakaoMapController.setPoiOptions(poiOptions: const PoiOptions(scale: KakaoMapPoiScale.large));
+                    await kakaoMapController.setPoiOptions(
+                        poiOptions:
+                            const PoiOptions(scale: KakaoMapPoiScale.large));
                     if (context.mounted) Navigator.pop(context);
                   },
                   child: const Text("LARGE"),
                 ),
                 CupertinoActionSheetAction(
                   onPressed: () async {
-                    await kakaoMapController.setPoiOptions(poiOptions: const PoiOptions(scale: KakaoMapPoiScale.xLarge));
+                    await kakaoMapController.setPoiOptions(
+                        poiOptions:
+                            const PoiOptions(scale: KakaoMapPoiScale.xLarge));
                     if (context.mounted) Navigator.pop(context);
                   },
                   child: const Text("XLARGE"),

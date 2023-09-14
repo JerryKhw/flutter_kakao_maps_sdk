@@ -37,7 +37,8 @@ class _KakaoMapViewState extends State<KakaoMapView> {
 
   @override
   Widget build(BuildContext context) {
-    assert(widget.options.defaultLevel < 22, "The maximum zoom level is up to 21.");
+    assert(widget.options.defaultLevel < 22,
+        "The maximum zoom level is up to 21.");
 
     const viewType = _kakaoMapViewViewId;
     final creationParams = widget.options.toMap();

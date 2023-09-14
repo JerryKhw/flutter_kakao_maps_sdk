@@ -9,7 +9,9 @@ class KakaoMapsSDK {
   void initialize() {
     if (_isInitialized) return;
 
-    const EventChannel(_logEventChannelName).receiveBroadcastStream().listen((event) {
+    const EventChannel(_logEventChannelName)
+        .receiveBroadcastStream()
+        .listen((event) {
       if (debug) {
         debugPrint(event?.toString());
       }

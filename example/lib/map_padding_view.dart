@@ -47,7 +47,9 @@ class _MapPaddingViewState extends State<MapPaddingView> {
                 CupertinoActionSheetAction(
                   onPressed: () async {
                     await kakaoMapController.setPadding(
-                      padding: EdgeInsets.only(bottom: MediaQuery.of(context).size.height / 2, right: MediaQuery.of(context).size.width / 2),
+                      padding: EdgeInsets.only(
+                          bottom: MediaQuery.of(context).size.height / 2,
+                          right: MediaQuery.of(context).size.width / 2),
                     );
                     if (context.mounted) Navigator.pop(context);
                   },
