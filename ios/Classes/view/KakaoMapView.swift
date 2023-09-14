@@ -19,28 +19,28 @@ class KakaoMapView: NSObject, FlutterPlatformView, MapControllerDelegate {
     
     private func viewMethodCallHandler(call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
-        case "dispose": dispose(onSuccess: result)
-        case "moveCamera": moveCamera(arguments: call.arguments as! NSDictionary, onSuccess: result)
-        case "animateCamera": animateCamera(arguments: call.arguments as! NSDictionary, onSuccess: result)
-        case "moveCameraTransform": moveCameraTransform(arguments: call.arguments as! NSDictionary, onSuccess: result)
-        case "animateCameraTransform": animateCameraTransform(arguments: call.arguments as! NSDictionary, onSuccess: result)
-        case "setViewInfo": setViewInfo(arguments: call.arguments as! NSDictionary, onSuccess: result)
-        case "showOverlay": showOverlay(arguments: call.arguments as! NSDictionary, onSuccess: result)
-        case "hideOverlay": hideOverlay(arguments: call.arguments as! NSDictionary, onSuccess: result)
-        case "setEnabled": setEnabled(arguments: call.arguments as! NSDictionary, onSuccess: result)
-        case "setBuildingScale": setBuildingScale(arguments: call.arguments as! NSDictionary, onSuccess: result)
-        case "getPadding": getPadding(onSuccess: result)
-        case "setPadding": setPadding(arguments: call.arguments as! NSDictionary, onSuccess: result)
-        case "setLogoPosition": setLogoPosition(arguments: call.arguments as! NSDictionary, onSuccess: result)
-        case "setPoiOptions": setPoiOptions(arguments: call.arguments as! NSDictionary, onSuccess: result)
-        case "setCompassOptions": setCompassOptions(arguments: call.arguments as! NSDictionary, onSuccess: result)
-        case "setScaleBarOptions": setScaleBarOptions(arguments: call.arguments as! NSDictionary, onSuccess: result)
-        case "refresh": refresh(onSuccess: result)
+        case "dispose": dispose(result: result)
+        case "moveCamera": moveCamera(arguments: call.arguments as! NSDictionary, result: result)
+        case "animateCamera": animateCamera(arguments: call.arguments as! NSDictionary, result: result)
+        case "moveCameraTransform": moveCameraTransform(arguments: call.arguments as! NSDictionary, result: result)
+        case "animateCameraTransform": animateCameraTransform(arguments: call.arguments as! NSDictionary, result: result)
+        case "setViewInfo": setViewInfo(arguments: call.arguments as! NSDictionary, result: result)
+        case "showOverlay": showOverlay(arguments: call.arguments as! NSDictionary, result: result)
+        case "hideOverlay": hideOverlay(arguments: call.arguments as! NSDictionary, result: result)
+        case "setEnabled": setEnabled(arguments: call.arguments as! NSDictionary, result: result)
+        case "setBuildingScale": setBuildingScale(arguments: call.arguments as! NSDictionary, result: result)
+        case "getPadding": getPadding(result: result)
+        case "setPadding": setPadding(arguments: call.arguments as! NSDictionary, result: result)
+        case "setLogoPosition": setLogoPosition(arguments: call.arguments as! NSDictionary, result: result)
+        case "setPoiOptions": setPoiOptions(arguments: call.arguments as! NSDictionary, result: result)
+        case "setCompassOptions": setCompassOptions(arguments: call.arguments as! NSDictionary, result: result)
+        case "setScaleBarOptions": setScaleBarOptions(arguments: call.arguments as! NSDictionary, result: result)
+        case "refresh": refresh(result: result)
         default: result(FlutterMethodNotImplemented)
         }
     }
     
-    func dispose(onSuccess: @escaping (Any?) -> ()) {
+    func dispose(result: @escaping (Any?) -> ()) {
         printLog("stopEngine")
         
         mapController.stopRendering()
@@ -48,251 +48,323 @@ class KakaoMapView: NSObject, FlutterPlatformView, MapControllerDelegate {
         
         viewMethodChannel.setMethodCallHandler(nil)
         
-        onSuccess(nil)
+        result(nil)
     }
     
-    func moveCamera(arguments: NSDictionary, onSuccess: @escaping (Any?) -> ()) {
+    func moveCamera(arguments: NSDictionary, result: @escaping (Any?) -> ()) {
         printLog("moveCamera")
         
-        if let mapView = self.mapView {
-            let cameraPosition = CameraUpdate.make(mapView: mapView).cameraPosition!
-            var cameraTarget = cameraPosition.targetPoint
-            var cameraZoomLevel = mapView.zoomLevel
-            var cameraRotation = cameraPosition.rotation
-            var cameraTilt = cameraPosition.tilt
-            
-            let target = arguments["target"] as? NSDictionary
-            if let target = target {
-                cameraTarget = target.toMapPoint()
-            }
-            
-            let zoomLevel = arguments["zoomLevel"] as? Int
-            if let zoomLevel = zoomLevel {
-                cameraZoomLevel = zoomLevel
-            }
-            
-            let rotation = arguments["rotation"] as? Double
-            if let rotation = rotation {
-                cameraRotation = rotation
-            }
-            
-            let tilt = arguments["tilt"] as? Double
-            if let tilt = tilt {
-                cameraTilt = tilt
-            }
-            
-            let cameraUpdate = CameraUpdate.make(target: cameraTarget, zoomLevel: cameraZoomLevel, rotation: cameraRotation, tilt: cameraTilt, mapView: mapView)
-            
-            mapView.moveCamera(cameraUpdate)
+        guard let mapView = self.mapView else {
+            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapview is nil", details: nil))
+            return
         }
         
-        onSuccess(nil)
+        let cameraPosition = CameraUpdate.make(mapView: mapView).cameraPosition!
+        var cameraTarget = cameraPosition.targetPoint
+        var cameraZoomLevel = mapView.zoomLevel
+        var cameraRotation = cameraPosition.rotation
+        var cameraTilt = cameraPosition.tilt
+        
+        let target = arguments["target"] as? NSDictionary
+        if let target = target {
+            cameraTarget = target.toMapPoint()
+        }
+        
+        let zoomLevel = arguments["zoomLevel"] as? Int
+        if let zoomLevel = zoomLevel {
+            cameraZoomLevel = zoomLevel
+        }
+        
+        let rotation = arguments["rotation"] as? Double
+        if let rotation = rotation {
+            cameraRotation = rotation
+        }
+        
+        let tilt = arguments["tilt"] as? Double
+        if let tilt = tilt {
+            cameraTilt = tilt
+        }
+        
+        let cameraUpdate = CameraUpdate.make(target: cameraTarget, zoomLevel: cameraZoomLevel, rotation: cameraRotation, tilt: cameraTilt, mapView: mapView)
+        
+        mapView.moveCamera(cameraUpdate)
+        
+        result(nil)
     }
     
-    func animateCamera(arguments: NSDictionary, onSuccess: @escaping (Any?) -> ()) {
+    func animateCamera(arguments: NSDictionary, result: @escaping (Any?) -> ()) {
         printLog("animateCamera")
         
-        if let mapView = self.mapView {
-            let cameraPosition = CameraUpdate.make(mapView: mapView).cameraPosition!
-            var cameraTarget = cameraPosition.targetPoint
-            var cameraZoomLevel = mapView.zoomLevel
-            var cameraRotation = cameraPosition.rotation
-            var cameraTilt = cameraPosition.tilt
-            
-            let target = arguments["target"] as? NSDictionary
-            if let target = target {
-                cameraTarget = target.toMapPoint()
-            }
-            
-            let zoomLevel = arguments["zoomLevel"] as? Int
-            if let zoomLevel = zoomLevel {
-                cameraZoomLevel = zoomLevel
-            }
-            
-            let rotation = arguments["rotation"] as? Double
-            if let rotation = rotation {
-                cameraRotation = rotation
-            }
-            
-            let tilt = arguments["tilt"] as? Double
-            if let tilt = tilt {
-                cameraTilt = tilt
-            }
-            
-            let cameraAnimationOptions = (arguments["cameraAnimationOptions"] as! NSDictionary).toCameraAnimationOptions()
-            
-            let cameraUpdate = CameraUpdate.make(target: cameraTarget, zoomLevel: cameraZoomLevel, rotation: cameraRotation, tilt: cameraTilt, mapView: mapView)
-            
-            mapView.animateCamera(cameraUpdate: cameraUpdate, options: cameraAnimationOptions)
+        guard let mapView = self.mapView else {
+            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapview is nil", details: nil))
+            return
         }
         
-        onSuccess(nil)
+        let cameraPosition = CameraUpdate.make(mapView: mapView).cameraPosition!
+        var cameraTarget = cameraPosition.targetPoint
+        var cameraZoomLevel = mapView.zoomLevel
+        var cameraRotation = cameraPosition.rotation
+        var cameraTilt = cameraPosition.tilt
+        
+        let target = arguments["target"] as? NSDictionary
+        if let target = target {
+            cameraTarget = target.toMapPoint()
+        }
+        
+        let zoomLevel = arguments["zoomLevel"] as? Int
+        if let zoomLevel = zoomLevel {
+            cameraZoomLevel = zoomLevel
+        }
+        
+        let rotation = arguments["rotation"] as? Double
+        if let rotation = rotation {
+            cameraRotation = rotation
+        }
+        
+        let tilt = arguments["tilt"] as? Double
+        if let tilt = tilt {
+            cameraTilt = tilt
+        }
+        
+        let cameraAnimationOptions = (arguments["cameraAnimationOptions"] as! NSDictionary).toCameraAnimationOptions()
+        
+        let cameraUpdate = CameraUpdate.make(target: cameraTarget, zoomLevel: cameraZoomLevel, rotation: cameraRotation, tilt: cameraTilt, mapView: mapView)
+        
+        mapView.animateCamera(cameraUpdate: cameraUpdate, options: cameraAnimationOptions)
+        
+        result(nil)
     }
     
-    func moveCameraTransform(arguments: NSDictionary, onSuccess: @escaping (Any?) -> ()) {
+    func moveCameraTransform(arguments: NSDictionary, result: @escaping (Any?) -> ()) {
         printLog("moveCameraTransform")
         
-        if let mapView = self.mapView {
-            let point = (arguments["point"] as! NSDictionary).toCameraTransformDelta()
-            let height = arguments["height"] as! Double
-            let rotation = arguments["rotation"] as! Double
-            let tilt = arguments["tilt"] as! Double
-            
-            let cameraUpdate = CameraUpdate.make(transform: CameraTransform(deltaPos: point, deltaHeight: height, deltaRotation: rotation, deltaTilt: tilt))
-            
-            mapView.moveCamera(cameraUpdate)
+        guard let mapView = self.mapView else {
+            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapview is nil", details: nil))
+            return
         }
         
-        onSuccess(nil)
+        let point = (arguments["point"] as! NSDictionary).toCameraTransformDelta()
+        let height = arguments["height"] as! Double
+        let rotation = arguments["rotation"] as! Double
+        let tilt = arguments["tilt"] as! Double
+        
+        let cameraUpdate = CameraUpdate.make(transform: CameraTransform(deltaPos: point, deltaHeight: height, deltaRotation: rotation, deltaTilt: tilt))
+        
+        mapView.moveCamera(cameraUpdate)
+        
+        result(nil)
     }
     
-    func animateCameraTransform(arguments: NSDictionary, onSuccess: @escaping (Any?) -> ()) {
+    func animateCameraTransform(arguments: NSDictionary, result: @escaping (Any?) -> ()) {
         printLog("animateCameraTransform")
         
-        if let mapView = self.mapView {
-            let point = (arguments["point"] as! NSDictionary).toCameraTransformDelta()
-            let height = arguments["height"] as! Double
-            let rotation = arguments["rotation"] as! Double
-            let tilt = arguments["tilt"] as! Double
-            let cameraAnimationOptions = (arguments["cameraAnimationOptions"] as! NSDictionary).toCameraAnimationOptions()
-            
-            let cameraUpdate = CameraUpdate.make(transform: CameraTransform(deltaPos: point, deltaHeight: height, deltaRotation: rotation, deltaTilt: tilt))
-            
-            mapView.animateCamera(cameraUpdate: cameraUpdate, options: cameraAnimationOptions)
+        guard let mapView = self.mapView else {
+            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapview is nil", details: nil))
+            return
         }
         
-        onSuccess(nil)
+        let point = (arguments["point"] as! NSDictionary).toCameraTransformDelta()
+        let height = arguments["height"] as! Double
+        let rotation = arguments["rotation"] as! Double
+        let tilt = arguments["tilt"] as! Double
+        let cameraAnimationOptions = (arguments["cameraAnimationOptions"] as! NSDictionary).toCameraAnimationOptions()
+        
+        let cameraUpdate = CameraUpdate.make(transform: CameraTransform(deltaPos: point, deltaHeight: height, deltaRotation: rotation, deltaTilt: tilt))
+        
+        mapView.animateCamera(cameraUpdate: cameraUpdate, options: cameraAnimationOptions)
+        
+        result(nil)
     }
     
-    func setViewInfo(arguments: NSDictionary, onSuccess: @escaping (Any?) -> ()) {
+    func setViewInfo(arguments: NSDictionary, result: @escaping (Any?) -> ()) {
         printLog("setViewInfo")
+        
+        guard let mapView = self.mapView else {
+            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapview is nil", details: nil))
+            return
+        }
         
         let appName = arguments["appName"] as! String
         let viewInfoName = arguments["viewInfoName"] as! String
         
-        mapView?.changeViewInfo(appName: appName, viewInfoName: viewInfoName)
+        mapView.changeViewInfo(appName: appName, viewInfoName: viewInfoName)
         
-        onSuccess(nil)
+        result(nil)
     }
     
-    func showOverlay(arguments: NSDictionary, onSuccess: @escaping (Any?) -> ()) {
+    func showOverlay(arguments: NSDictionary, result: @escaping (Any?) -> ()) {
         printLog("showOverlay")
         
+        guard let mapView = self.mapView else {
+            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapview is nil", details: nil))
+            return
+        }
+        
         let overlay = arguments["overlay"] as! String
         
-        mapView?.showOverlay(overlay)
+        mapView.showOverlay(overlay)
         
-        onSuccess(nil)
+        result(nil)
     }
     
-    func hideOverlay(arguments: NSDictionary, onSuccess: @escaping (Any?) -> ()) {
+    func hideOverlay(arguments: NSDictionary, result: @escaping (Any?) -> ()) {
         printLog("hideOverlay")
         
+        guard let mapView = self.mapView else {
+            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapview is nil", details: nil))
+            return
+        }
+        
         let overlay = arguments["overlay"] as! String
         
-        mapView?.hideOverlay(overlay)
+        mapView.hideOverlay(overlay)
         
-        onSuccess(nil)
+        result(nil)
     }
     
-    func setEnabled(arguments: NSDictionary, onSuccess: @escaping (Any?) -> ()) {
+    func setEnabled(arguments: NSDictionary, result: @escaping (Any?) -> ()) {
         printLog("setEnabled")
+        
+        guard let mapView = self.mapView else {
+            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapview is nil", details: nil))
+            return
+        }
         
         let enabled = arguments["enabled"] as! Bool
         
-        mapView?.isEnabled = enabled
+        mapView.isEnabled = enabled
         
-        onSuccess(nil)
+        result(nil)
     }
     
-    func setBuildingScale(arguments: NSDictionary, onSuccess: @escaping (Any?) -> ()) {
+    func setBuildingScale(arguments: NSDictionary, result: @escaping (Any?) -> ()) {
         printLog("setBuildingScale")
+        
+        guard let mapView = self.mapView else {
+            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapview is nil", details: nil))
+            return
+        }
         
         let buildingScale = Float(arguments["buildingScale"] as! Double)
         
-        mapView?.buildingScale = buildingScale
+        mapView.buildingScale = buildingScale
         
-        onSuccess(nil)
+        result(nil)
     }
     
-    func getPadding(onSuccess: @escaping (Any?) -> ()) {
+    func getPadding(result: @escaping (Any?) -> ()) {
         printLog("getPadding")
         
-        let margins = mapView?.margins ?? UIEdgeInsets()
+        guard let mapView = self.mapView else {
+            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapview is nil", details: nil))
+            return
+        }
         
-        onSuccess(["left": margins.left, "top": margins.top, "right": margins.right, "bottom":margins.bottom])
+        let margins = mapView.margins
+        
+        result(["left": margins.left, "top": margins.top, "right": margins.right, "bottom":margins.bottom])
     }
     
-    func setPadding(arguments: NSDictionary, onSuccess: @escaping (Any?) -> ()) {
+    func setPadding(arguments: NSDictionary, result: @escaping (Any?) -> ()) {
         printLog("setPadding")
+        
+        guard let mapView = self.mapView else {
+            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapview is nil", details: nil))
+            return
+        }
         
         let padding = arguments.toUIEdgeInsets()
         
-        mapView?.setMargins(padding)
+        mapView.setMargins(padding)
         
-        onSuccess(nil)
+        result(nil)
     }
     
-    func setLogoPosition(arguments: NSDictionary, onSuccess: @escaping (Any?) -> ()) {
+    func setLogoPosition(arguments: NSDictionary, result: @escaping (Any?) -> ()) {
         printLog("setLogoPosition")
+        
+        guard let mapView = self.mapView else {
+            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapview is nil", details: nil))
+            return
+        }
         
         let logoPosition = arguments.toKakaoMapPosition()
         
-        mapView?.setLogoPosition(origin: logoPosition.alignment.toGuiAlignment(), position: CGPoint(x:logoPosition.x, y: logoPosition.y))
+        mapView.setLogoPosition(origin: logoPosition.alignment.toGuiAlignment(), position: CGPoint(x:logoPosition.x, y: logoPosition.y))
         
-        onSuccess(nil)
+        result(nil)
     }
     
-    func setPoiOptions(arguments: NSDictionary, onSuccess: @escaping (Any?) -> ()) {
+    func setPoiOptions(arguments: NSDictionary, result: @escaping (Any?) -> ()) {
         printLog("setPoiOptions")
+        
+        guard let mapView = self.mapView else {
+            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapview is nil", details: nil))
+            return
+        }
         
         let poiOptions = arguments.toPoiOptions()
         
-        mapView?.poiClickable = poiOptions.clickable
-        mapView?.setPoiEnabled(poiOptions.enabled)
-        mapView?.poiScale = poiOptions.scale
+        mapView.poiClickable = poiOptions.clickable
+        mapView.setPoiEnabled(poiOptions.enabled)
+        mapView.poiScale = poiOptions.scale
         
-        onSuccess(nil)
+        result(nil)
     }
     
-    func setCompassOptions(arguments: NSDictionary, onSuccess: @escaping (Any?) -> ()) {
+    func setCompassOptions(arguments: NSDictionary, result: @escaping (Any?) -> ()) {
         printLog("setCompassOptions")
+        
+        guard let mapView = self.mapView else {
+            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapview is nil", details: nil))
+            return
+        }
         
         let compassOptions = arguments.toCompassOptions()
         
         if(compassOptions.enabled) {
-            mapView?.showCompass()
+            mapView.showCompass()
         } else {
-            mapView?.hideCompass()
+            mapView.hideCompass()
         }
-        mapView?.setCompassPosition(origin: compassOptions.position.alignment.toGuiAlignment(), position: CGPoint(x: compassOptions.position.x, y: compassOptions.position.y))
+        mapView.setCompassPosition(origin: compassOptions.position.alignment.toGuiAlignment(), position: CGPoint(x: compassOptions.position.x, y: compassOptions.position.y))
         
-        onSuccess(nil)
+        result(nil)
     }
     
-    func setScaleBarOptions(arguments: NSDictionary, onSuccess: @escaping (Any?) -> ()) {
+    func setScaleBarOptions(arguments: NSDictionary, result: @escaping (Any?) -> ()) {
         printLog("setScaleBarOptions")
+        
+        guard let mapView = self.mapView else {
+            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapview is nil", details: nil))
+            return
+        }
         
         let scaleBarOptions = arguments.toScaleBarOptions()
         
         if(scaleBarOptions.enabled) {
-            mapView?.showScaleBar()
+            mapView.showScaleBar()
         } else {
-            mapView?.hideScaleBar()
+            mapView.hideScaleBar()
         }
-        mapView?.setScaleBarPosition(origin: scaleBarOptions.position.alignment.toGuiAlignment(), position: CGPoint(x:scaleBarOptions.position.x, y: scaleBarOptions.position.y))
-        mapView?.setScaleBarAutoDisappear(scaleBarOptions.autoDisabled)
-        mapView?.setScaleBarFadeInOutOption(scaleBarOptions.fadeInOutOptions)
+        mapView.setScaleBarPosition(origin: scaleBarOptions.position.alignment.toGuiAlignment(), position: CGPoint(x:scaleBarOptions.position.x, y: scaleBarOptions.position.y))
+        mapView.setScaleBarAutoDisappear(scaleBarOptions.autoDisabled)
+        mapView.setScaleBarFadeInOutOption(scaleBarOptions.fadeInOutOptions)
         
-        onSuccess(nil)
+        result(nil)
     }
     
-    func refresh(onSuccess: @escaping (Any?) -> ()) {
+    func refresh(result: @escaping (Any?) -> ()) {
         printLog("refresh")
         
-        mapView?.refresh()
+        guard let mapView = self.mapView else {
+            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapview is nil", details: nil))
+            return
+        }
         
-        onSuccess(nil)
+        mapView.refresh()
+        
+        result(nil)
     }
     
     init(
@@ -357,40 +429,42 @@ class KakaoMapView: NSObject, FlutterPlatformView, MapControllerDelegate {
         if mapController.addView(mapViewInfo) == Result.OK {
             mapView = mapController.getView(options.viewName) as? KakaoMap
             
-            // Overlay
-            if(options.overlay != nil) {
-                mapView?.showOverlay(options.overlay!)
+            if let mapView = self.mapView {
+                // Overlay
+                if(options.overlay != nil) {
+                    mapView.showOverlay(options.overlay!)
+                }
+                // Language
+                mapView.setLanguage(options.language)
+                // BuildingScale
+                mapView.buildingScale = options.buildingScale
+                // Padding
+                mapView.setMargins(options.padding)
+                // LogoPosition
+                mapView.setLogoPosition(origin: options.logoPosition.alignment.toGuiAlignment(), position: CGPoint(x: options.logoPosition.x, y: options.logoPosition.y))
+                // PoiOptions
+                mapView.poiClickable = options.poiOptions.clickable
+                mapView.setPoiEnabled(options.poiOptions.enabled)
+                mapView.poiScale = options.poiOptions.scale
+                // CompassOptions
+                if(options.compassOptions.enabled) {
+                    mapView.showCompass()
+                } else {
+                    mapView.hideCompass()
+                }
+                mapView.setCompassPosition(origin: options.compassOptions.position.alignment.toGuiAlignment(), position: CGPoint(x: options.compassOptions.position.x, y: options.compassOptions.position.y))
+                // ScaleBarOptions
+                if(options.scaleBarOptions.enabled) {
+                    mapView.showScaleBar()
+                } else {
+                    mapView.hideScaleBar()
+                }
+                mapView.setScaleBarPosition(origin: options.scaleBarOptions.position.alignment.toGuiAlignment(), position: CGPoint(x: options.scaleBarOptions.position.x, y: options.scaleBarOptions.position.y))
+                mapView.setScaleBarAutoDisappear(options.scaleBarOptions.autoDisabled)
+                mapView.setScaleBarFadeInOutOption(options.scaleBarOptions.fadeInOutOptions)
+                
+                viewMethodChannel.invokeMethod("onMapReady", arguments: nil)
             }
-            // Language
-            mapView?.setLanguage(options.language)
-            // BuildingScale
-            mapView?.buildingScale = options.buildingScale
-            // Padding
-            mapView?.setMargins(options.padding)
-            // LogoPosition
-            mapView?.setLogoPosition(origin: options.logoPosition.alignment.toGuiAlignment(), position: CGPoint(x: options.logoPosition.x, y: options.logoPosition.y))
-            // PoiOptions
-            mapView?.poiClickable = options.poiOptions.clickable
-            mapView?.setPoiEnabled(options.poiOptions.enabled)
-            mapView?.poiScale = options.poiOptions.scale
-            // CompassOptions
-            if(options.compassOptions.enabled) {
-                mapView?.showCompass()
-            } else {
-                mapView?.hideCompass()
-            }
-            mapView?.setCompassPosition(origin: options.compassOptions.position.alignment.toGuiAlignment(), position: CGPoint(x: options.compassOptions.position.x, y: options.compassOptions.position.y))
-            // ScaleBarOptions
-            if(options.scaleBarOptions.enabled) {
-                mapView?.showScaleBar()
-            } else {
-                mapView?.hideScaleBar()
-            }
-            mapView?.setScaleBarPosition(origin: options.scaleBarOptions.position.alignment.toGuiAlignment(), position: CGPoint(x: options.scaleBarOptions.position.x, y: options.scaleBarOptions.position.y))
-            mapView?.setScaleBarAutoDisappear(options.scaleBarOptions.autoDisabled)
-            mapView?.setScaleBarFadeInOutOption(options.scaleBarOptions.fadeInOutOptions)
-            
-            viewMethodChannel.invokeMethod("onMapReady", arguments: nil)
         }
     }
     

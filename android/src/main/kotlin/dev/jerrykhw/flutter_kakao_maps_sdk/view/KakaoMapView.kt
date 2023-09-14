@@ -54,7 +54,11 @@ internal class KakaoMapView(
                 "moveCamera" -> moveCamera(call.arguments as JSONObject, result)
                 "animateCamera" -> animateCamera(call.arguments as JSONObject, result)
                 "moveCameraTransform" -> moveCameraTransform(call.arguments as JSONObject, result)
-                "animateCameraTransform" -> animateCameraTransform(call.arguments as JSONObject, result)
+                "animateCameraTransform" -> animateCameraTransform(
+                    call.arguments as JSONObject,
+                    result
+                )
+
                 "setViewInfo" -> setViewInfo(call.arguments as JSONObject, result)
                 "showOverlay" -> showOverlay(call.arguments as JSONObject, result)
                 "hideOverlay" -> hideOverlay(call.arguments as JSONObject, result)
@@ -84,43 +88,46 @@ internal class KakaoMapView(
     private fun moveCamera(arguments: JSONObject, result: MethodChannel.Result) {
         printLog("moveCamera")
 
-        mapView?.let { mapView ->
-            val cameraPosition = mapView.cameraPosition!!
-            var cameraTarget = cameraPosition.position
-            var cameraZoomLevel = cameraPosition.zoomLevel
-            val cameraHeight = cameraPosition.height
-            var cameraRotation = cameraPosition.rotationAngle
-            var cameraTilt = cameraPosition.tiltAngle
-
-            if (!arguments.isNull("target")) {
-                cameraTarget = arguments.getJSONObject("target").toLatLng()
-            }
-
-            if (!arguments.isNull("zoomLevel")) {
-                cameraZoomLevel = arguments.getInt("zoomLevel")
-            }
-
-            if (!arguments.isNull("rotation")) {
-                cameraRotation = arguments.getDouble("rotation")
-            }
-
-            if (!arguments.isNull("tilt")) {
-                cameraTilt = arguments.getDouble("tilt")
-            }
-
-            val cameraUpdate = CameraUpdateFactory.newCameraPosition(
-                CameraPosition.from(
-                    cameraTarget.latitude,
-                    cameraTarget.longitude,
-                    cameraZoomLevel,
-                    cameraTilt,
-                    cameraRotation,
-                    cameraHeight,
-                ),
-            )
-
-            mapView.moveCamera(cameraUpdate)
+        val mapView = mapView ?: run {
+            result.error("NOT_FOUND_MAPVIEW", "mapview is null", null)
+            return
         }
+
+        val cameraPosition = mapView.cameraPosition!!
+        var cameraTarget = cameraPosition.position
+        var cameraZoomLevel = cameraPosition.zoomLevel
+        val cameraHeight = cameraPosition.height
+        var cameraRotation = cameraPosition.rotationAngle
+        var cameraTilt = cameraPosition.tiltAngle
+
+        if (!arguments.isNull("target")) {
+            cameraTarget = arguments.getJSONObject("target").toLatLng()
+        }
+
+        if (!arguments.isNull("zoomLevel")) {
+            cameraZoomLevel = arguments.getInt("zoomLevel")
+        }
+
+        if (!arguments.isNull("rotation")) {
+            cameraRotation = arguments.getDouble("rotation")
+        }
+
+        if (!arguments.isNull("tilt")) {
+            cameraTilt = arguments.getDouble("tilt")
+        }
+
+        val cameraUpdate = CameraUpdateFactory.newCameraPosition(
+            CameraPosition.from(
+                cameraTarget.latitude,
+                cameraTarget.longitude,
+                cameraZoomLevel,
+                cameraTilt,
+                cameraRotation,
+                cameraHeight,
+            ),
+        )
+
+        mapView.moveCamera(cameraUpdate)
 
         result.success(null)
     }
@@ -128,77 +135,85 @@ internal class KakaoMapView(
     private fun animateCamera(arguments: JSONObject, result: MethodChannel.Result) {
         printLog("animateCamera")
 
-        mapView?.let { mapView ->
-            val cameraPosition = mapView.cameraPosition!!
-            var cameraTarget = cameraPosition.position
-            var cameraZoomLevel = cameraPosition.zoomLevel
-            val cameraHeight = cameraPosition.height
-            var cameraRotation = cameraPosition.rotationAngle
-            var cameraTilt = cameraPosition.tiltAngle
-
-            if (!arguments.isNull("target")) {
-                cameraTarget = arguments.getJSONObject("target").toLatLng()
-            }
-
-            if (!arguments.isNull("zoomLevel")) {
-                cameraZoomLevel = arguments.getInt("zoomLevel")
-            }
-
-            if (!arguments.isNull("rotation")) {
-                cameraRotation = arguments.getDouble("rotation")
-            }
-
-            if (!arguments.isNull("tilt")) {
-                cameraTilt = arguments.getDouble("tilt")
-            }
-
-            val cameraAnimationOptions = arguments.getJSONObject("cameraAnimationOptions").toCameraAnimation()
-
-            val cameraUpdate = CameraUpdateFactory.newCameraPosition(
-                CameraPosition.from(
-                    cameraTarget.latitude,
-                    cameraTarget.longitude,
-                    cameraZoomLevel,
-                    cameraTilt,
-                    cameraRotation,
-                    cameraHeight,
-                ),
-            )
-
-            mapView.moveCamera(cameraUpdate, cameraAnimationOptions)
+        val mapView = mapView ?: run {
+            result.error("NOT_FOUND_MAPVIEW", "mapview is null", null)
+            return
         }
+
+        val cameraPosition = mapView.cameraPosition!!
+        var cameraTarget = cameraPosition.position
+        var cameraZoomLevel = cameraPosition.zoomLevel
+        val cameraHeight = cameraPosition.height
+        var cameraRotation = cameraPosition.rotationAngle
+        var cameraTilt = cameraPosition.tiltAngle
+
+        if (!arguments.isNull("target")) {
+            cameraTarget = arguments.getJSONObject("target").toLatLng()
+        }
+
+        if (!arguments.isNull("zoomLevel")) {
+            cameraZoomLevel = arguments.getInt("zoomLevel")
+        }
+
+        if (!arguments.isNull("rotation")) {
+            cameraRotation = arguments.getDouble("rotation")
+        }
+
+        if (!arguments.isNull("tilt")) {
+            cameraTilt = arguments.getDouble("tilt")
+        }
+
+        val cameraAnimationOptions =
+            arguments.getJSONObject("cameraAnimationOptions").toCameraAnimation()
+
+        val cameraUpdate = CameraUpdateFactory.newCameraPosition(
+            CameraPosition.from(
+                cameraTarget.latitude,
+                cameraTarget.longitude,
+                cameraZoomLevel,
+                cameraTilt,
+                cameraRotation,
+                cameraHeight,
+            ),
+        )
+
+        mapView.moveCamera(cameraUpdate, cameraAnimationOptions)
 
         result.success(null)
     }
+
     private fun moveCameraTransform(arguments: JSONObject, result: MethodChannel.Result) {
         printLog("moveCameraTransform")
 
-        mapView?.let { mapView ->
-            val cameraPosition = mapView.cameraPosition!!
-            val cameraTarget = cameraPosition.position
-            val cameraZoomLevel = cameraPosition.zoomLevel
-            val cameraHeight = cameraPosition.height
-            val cameraRotation = cameraPosition.rotationAngle
-            val cameraTilt = cameraPosition.tiltAngle
-
-            val point = arguments.getJSONObject("point").toLatLng()
-            val height = arguments.getDouble("height")
-            val rotation = arguments.getDouble("rotation")
-            val tilt = arguments.getDouble("tilt")
-
-            val cameraUpdate = CameraUpdateFactory.newCameraPosition(
-                CameraPosition.from(
-                    cameraTarget.latitude + point.latitude,
-                    cameraTarget.longitude + point.longitude,
-                    cameraZoomLevel,
-                    cameraTilt + tilt,
-                    cameraRotation + rotation,
-                    cameraHeight + height,
-                ),
-            )
-
-            mapView.moveCamera(cameraUpdate)
+        val mapView = mapView ?: run {
+            result.error("NOT_FOUND_MAPVIEW", "mapview is null", null)
+            return
         }
+
+        val cameraPosition = mapView.cameraPosition!!
+        val cameraTarget = cameraPosition.position
+        val cameraZoomLevel = cameraPosition.zoomLevel
+        val cameraHeight = cameraPosition.height
+        val cameraRotation = cameraPosition.rotationAngle
+        val cameraTilt = cameraPosition.tiltAngle
+
+        val point = arguments.getJSONObject("point").toLatLng()
+        val height = arguments.getDouble("height")
+        val rotation = arguments.getDouble("rotation")
+        val tilt = arguments.getDouble("tilt")
+
+        val cameraUpdate = CameraUpdateFactory.newCameraPosition(
+            CameraPosition.from(
+                cameraTarget.latitude + point.latitude,
+                cameraTarget.longitude + point.longitude,
+                cameraZoomLevel,
+                cameraTilt + tilt,
+                cameraRotation + rotation,
+                cameraHeight + height,
+            ),
+        )
+
+        mapView.moveCamera(cameraUpdate)
 
         result.success(null)
     }
@@ -206,7 +221,11 @@ internal class KakaoMapView(
     private fun animateCameraTransform(arguments: JSONObject, result: MethodChannel.Result) {
         printLog("animateCameraTransform")
 
-        mapView?.let { mapView ->
+        val mapView = mapView ?: run {
+            result.error("NOT_FOUND_MAPVIEW", "mapview is null", null)
+            return
+        }
+
             val cameraPosition = mapView.cameraPosition!!
             val cameraTarget = cameraPosition.position
             val cameraZoomLevel = cameraPosition.zoomLevel
@@ -219,7 +238,8 @@ internal class KakaoMapView(
             val rotation = arguments.getDouble("rotation")
             val tilt = arguments.getDouble("tilt")
 
-            val cameraAnimationOptions = arguments.getJSONObject("cameraAnimationOptions").toCameraAnimation()
+            val cameraAnimationOptions =
+                arguments.getJSONObject("cameraAnimationOptions").toCameraAnimation()
 
             val cameraUpdate = CameraUpdateFactory.newCameraPosition(
                 CameraPosition.from(
@@ -233,7 +253,6 @@ internal class KakaoMapView(
             )
 
             mapView.moveCamera(cameraUpdate, cameraAnimationOptions)
-        }
 
         result.success(null)
     }
@@ -241,10 +260,15 @@ internal class KakaoMapView(
     private fun setViewInfo(arguments: JSONObject, result: MethodChannel.Result) {
         printLog("setViewInfo")
 
+        val mapView = mapView ?: run {
+            result.error("NOT_FOUND_MAPVIEW", "mapview is null", null)
+            return
+        }
+
         val appName = arguments.getString("appName")
         val viewInfoName = arguments.getString("viewInfoName")
 
-        mapView?.changeMapViewInfo(MapViewInfo.from(appName, viewInfoName))
+        mapView.changeMapViewInfo(MapViewInfo.from(appName, viewInfoName))
 
         result.success(null)
     }
@@ -252,9 +276,14 @@ internal class KakaoMapView(
     private fun showOverlay(arguments: JSONObject, result: MethodChannel.Result) {
         printLog("showOverlay")
 
+        val mapView = mapView ?: run {
+            result.error("NOT_FOUND_MAPVIEW", "mapview is null", null)
+            return
+        }
+
         val overlay = MapOverlay.getEnum(arguments.getString("overlay"))
 
-        mapView?.showOverlay(overlay)
+        mapView.showOverlay(overlay)
 
         result.success(null)
     }
@@ -262,9 +291,14 @@ internal class KakaoMapView(
     private fun hideOverlay(arguments: JSONObject, result: MethodChannel.Result) {
         printLog("hideOverlay")
 
+        val mapView = mapView ?: run {
+            result.error("NOT_FOUND_MAPVIEW", "mapview is null", null)
+            return
+        }
+
         val overlay = MapOverlay.getEnum(arguments.getString("overlay"))
 
-        mapView?.hideOverlay(overlay)
+        mapView.hideOverlay(overlay)
 
         result.success(null)
     }
@@ -272,9 +306,14 @@ internal class KakaoMapView(
     private fun setEnabled(arguments: JSONObject, result: MethodChannel.Result) {
         printLog("setEnabled")
 
+        val mapView = mapView ?: run {
+            result.error("NOT_FOUND_MAPVIEW", "mapview is null", null)
+            return
+        }
+
         val enabled = arguments.getBoolean("enabled")
 
-        mapView?.isVisible = enabled
+        mapView.isVisible = enabled
 
         result.success(null)
     }
@@ -282,9 +321,14 @@ internal class KakaoMapView(
     private fun setBuildingScale(arguments: JSONObject, result: MethodChannel.Result) {
         printLog("setBuildingScale")
 
+        val mapView = mapView ?: run {
+            result.error("NOT_FOUND_MAPVIEW", "mapview is null", null)
+            return
+        }
+
         val buildingScale = arguments.getDouble("buildingScale").toFloat()
 
-        mapView?.buildingHeightScale = buildingScale
+        mapView.buildingHeightScale = buildingScale
 
         result.success(null)
     }
@@ -292,7 +336,12 @@ internal class KakaoMapView(
     private fun getPadding(result: MethodChannel.Result) {
         printLog("getPadding")
 
-        val padding = mapView?.padding ?: Padding()
+        val mapView = mapView ?: run {
+            result.error("NOT_FOUND_MAPVIEW", "mapview is null", null)
+            return
+        }
+
+        val padding = mapView.padding
 
         val json = JSONObject().apply {
             put("left", padding.left.dp)
@@ -307,9 +356,14 @@ internal class KakaoMapView(
     private fun setPadding(arguments: JSONObject, result: MethodChannel.Result) {
         printLog("setPadding")
 
+        val mapView = mapView ?: run {
+            result.error("NOT_FOUND_MAPVIEW", "mapview is null", null)
+            return
+        }
+
         val padding = arguments.toPadding()
 
-        mapView?.setPadding(
+        mapView.setPadding(
             padding.left.px,
             padding.top.px,
             padding.right.px,
@@ -322,9 +376,14 @@ internal class KakaoMapView(
     private fun setLogoPosition(arguments: JSONObject, result: MethodChannel.Result) {
         printLog("setLogoPosition")
 
+        val mapView = mapView ?: run {
+            result.error("NOT_FOUND_MAPVIEW", "mapview is null", null)
+            return
+        }
+
         val logoPosition = arguments.toKakaoMapPosition()
 
-        mapView?.logo?.setPosition(
+        mapView.logo?.setPosition(
             logoPosition.alignment.toMapGravity(),
             logoPosition.x.px,
             logoPosition.y.px,
@@ -336,11 +395,16 @@ internal class KakaoMapView(
     private fun setPoiOptions(arguments: JSONObject, result: MethodChannel.Result) {
         printLog("setPoiOptions")
 
+        val mapView = mapView ?: run {
+            result.error("NOT_FOUND_MAPVIEW", "mapview is null", null)
+            return
+        }
+
         val poiOptions = arguments.toPoiOptions()
 
-        mapView?.setPoiClickable(poiOptions.clickable)
-        mapView?.setPoiVisible(poiOptions.enabled)
-        mapView?.setPoiScale(poiOptions.scale)
+        mapView.setPoiClickable(poiOptions.clickable)
+        mapView.setPoiVisible(poiOptions.enabled)
+        mapView.setPoiScale(poiOptions.scale)
 
         result.success(null)
     }
@@ -348,9 +412,14 @@ internal class KakaoMapView(
     private fun setCompassOptions(arguments: JSONObject, result: MethodChannel.Result) {
         printLog("setCompassOptions")
 
+        val mapView = mapView ?: run {
+            result.error("NOT_FOUND_MAPVIEW", "mapview is null", null)
+            return
+        }
+
         val compassOptions = arguments.toCompassOptions()
 
-        compass = mapView?.compass
+        compass = mapView.compass
         compass?.let { compass ->
             if (compassOptions.enabled) {
                 compass.show()
@@ -370,9 +439,14 @@ internal class KakaoMapView(
     private fun setScaleBarOptions(arguments: JSONObject, result: MethodChannel.Result) {
         printLog("setScaleBarOptions")
 
+        val mapView = mapView ?: run {
+            result.error("NOT_FOUND_MAPVIEW", "mapview is null", null)
+            return
+        }
+
         val scaleBarOptions = arguments.toScaleBarOptions()
 
-        scaleBar = mapView?.scaleBar
+        scaleBar = mapView.scaleBar
         scaleBar?.let { scaleBar ->
             if (scaleBarOptions.enabled) {
                 scaleBar.show()
