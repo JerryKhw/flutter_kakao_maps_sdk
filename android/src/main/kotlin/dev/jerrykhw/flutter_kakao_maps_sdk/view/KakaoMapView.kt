@@ -424,8 +424,6 @@ internal class KakaoMapView(
                     mapView = kakaoMap
 
                     mapView?.let { mapView ->
-                        mapView.setOnPaddingChangeListener { }
-
                         // Overlay
                         if (options.overlay != null) {
                             mapView.showOverlay(options.overlay!!)
