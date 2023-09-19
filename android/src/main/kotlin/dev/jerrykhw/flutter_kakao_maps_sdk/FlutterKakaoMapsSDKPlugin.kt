@@ -1,17 +1,20 @@
 package dev.jerrykhw.flutter_kakao_maps_sdk
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import dev.jerrykhw.flutter_kakao_maps_sdk.util.LogStreamHandler
 import dev.jerrykhw.flutter_kakao_maps_sdk.view.KakaoMapViewFactory
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.EventChannel
+import java.io.InputStream
 
 class FlutterKakaoMapsSDKPlugin : FlutterPlugin, ActivityAware {
-    private lateinit var pluginBinding: FlutterPlugin.FlutterPluginBinding
 
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         pluginBinding = binding
+        flutterAssets = binding.flutterAssets
 
         val logEventChannel = EventChannel(binding.binaryMessenger, LOG_EVENT_CHANNEL_NAME)
         logEventChannel.setStreamHandler(logStreamHandler)
@@ -46,5 +49,13 @@ class FlutterKakaoMapsSDKPlugin : FlutterPlugin, ActivityAware {
 
         internal fun createViewMethodChannelName(id: Int): String =
             "${KAKAO_MAP_VIEW_VIEW_ID}#$id"
+
+        private lateinit var pluginBinding: FlutterPlugin.FlutterPluginBinding
+        private lateinit var flutterAssets: FlutterPlugin.FlutterAssets
+
+        internal fun getAsset(named: String): InputStream {
+            val path = flutterAssets.getAssetFilePathByName(named)
+            return pluginBinding.applicationContext.assets.open(path)
+        }
     }
 }

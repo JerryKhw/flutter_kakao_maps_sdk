@@ -4,6 +4,8 @@ class KakaoMapsSDK {
   static final KakaoMapsSDK instance = KakaoMapsSDK();
 
   bool _isInitialized = false;
+
+  /// 디버그 활성화 여부
   bool debug = false;
 
   void initialize() {

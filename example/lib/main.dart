@@ -79,6 +79,10 @@ class MainView extends StatelessWidget {
                     "지도 이동",
                     targetView: MapMoveView(),
                   ),
+                  MainItem(
+                    "지도 레이어",
+                    targetView: MapLayerView(),
+                  ),
                 ],
               ),
             ),
@@ -210,7 +214,7 @@ class _MapOverlayViewState extends State<MapOverlayView> {
                 CupertinoActionSheetAction(
                   onPressed: () async {
                     await kakaoMapController.showOverlay(
-                        overlay: KakaoMapOverlay.roadviewLine);
+                        overlay: KakaoMapOverlay.roadViewLine);
                     if (context.mounted) Navigator.pop(context);
                   },
                   child: const Text("SHOW ROADVIEWLINE"),
@@ -218,7 +222,7 @@ class _MapOverlayViewState extends State<MapOverlayView> {
                 CupertinoActionSheetAction(
                   onPressed: () async {
                     await kakaoMapController.hideOverlay(
-                        overlay: KakaoMapOverlay.roadviewLine);
+                        overlay: KakaoMapOverlay.roadViewLine);
                     if (context.mounted) Navigator.pop(context);
                   },
                   child: const Text("HIDE ROADVIEWLINE"),
@@ -226,7 +230,7 @@ class _MapOverlayViewState extends State<MapOverlayView> {
                 CupertinoActionSheetAction(
                   onPressed: () async {
                     await kakaoMapController.showOverlay(
-                        overlay: KakaoMapOverlay.hillshading);
+                        overlay: KakaoMapOverlay.hillShading);
                     if (context.mounted) Navigator.pop(context);
                   },
                   child: const Text("SHOW HILLSHADING"),
@@ -234,7 +238,7 @@ class _MapOverlayViewState extends State<MapOverlayView> {
                 CupertinoActionSheetAction(
                   onPressed: () async {
                     await kakaoMapController.hideOverlay(
-                        overlay: KakaoMapOverlay.hillshading);
+                        overlay: KakaoMapOverlay.hillShading);
                     if (context.mounted) Navigator.pop(context);
                   },
                   child: const Text("HIDE HILLSHADING"),
@@ -611,7 +615,7 @@ class _MapPoiViewState extends State<MapPoiView> {
                 CupertinoActionSheetAction(
                   onPressed: () async {
                     await kakaoMapController.setPoiOptions(
-                        poiOptions: const PoiOptions());
+                        poiOptions: const KakaoMapPoiOptions());
                     if (context.mounted) Navigator.pop(context);
                   },
                   child: const Text("ENABLED"),
@@ -619,7 +623,7 @@ class _MapPoiViewState extends State<MapPoiView> {
                 CupertinoActionSheetAction(
                   onPressed: () async {
                     await kakaoMapController.setPoiOptions(
-                        poiOptions: const PoiOptions(enabled: false));
+                        poiOptions: const KakaoMapPoiOptions(enabled: false));
                     if (context.mounted) Navigator.pop(context);
                   },
                   child: const Text("DISABLED"),
@@ -627,8 +631,8 @@ class _MapPoiViewState extends State<MapPoiView> {
                 CupertinoActionSheetAction(
                   onPressed: () async {
                     await kakaoMapController.setPoiOptions(
-                        poiOptions:
-                            const PoiOptions(scale: KakaoMapPoiScale.small));
+                        poiOptions: const KakaoMapPoiOptions(
+                            scale: KakaoMapPoiScale.small));
                     if (context.mounted) Navigator.pop(context);
                   },
                   child: const Text("SMALL"),
@@ -636,8 +640,8 @@ class _MapPoiViewState extends State<MapPoiView> {
                 CupertinoActionSheetAction(
                   onPressed: () async {
                     await kakaoMapController.setPoiOptions(
-                        poiOptions:
-                            const PoiOptions(scale: KakaoMapPoiScale.regular));
+                        poiOptions: const KakaoMapPoiOptions(
+                            scale: KakaoMapPoiScale.regular));
                     if (context.mounted) Navigator.pop(context);
                   },
                   child: const Text("REGULAR"),
@@ -645,8 +649,8 @@ class _MapPoiViewState extends State<MapPoiView> {
                 CupertinoActionSheetAction(
                   onPressed: () async {
                     await kakaoMapController.setPoiOptions(
-                        poiOptions:
-                            const PoiOptions(scale: KakaoMapPoiScale.large));
+                        poiOptions: const KakaoMapPoiOptions(
+                            scale: KakaoMapPoiScale.large));
                     if (context.mounted) Navigator.pop(context);
                   },
                   child: const Text("LARGE"),
@@ -654,8 +658,8 @@ class _MapPoiViewState extends State<MapPoiView> {
                 CupertinoActionSheetAction(
                   onPressed: () async {
                     await kakaoMapController.setPoiOptions(
-                        poiOptions:
-                            const PoiOptions(scale: KakaoMapPoiScale.xLarge));
+                        poiOptions: const KakaoMapPoiOptions(
+                            scale: KakaoMapPoiScale.xLarge));
                     if (context.mounted) Navigator.pop(context);
                   },
                   child: const Text("XLARGE"),
@@ -667,7 +671,7 @@ class _MapPoiViewState extends State<MapPoiView> {
       ),
       body: KakaoMapView(
         options: const KakaoMapOptions(
-          poiOptions: PoiOptions(
+          poiOptions: KakaoMapPoiOptions(
             clickable: true,
             enabled: true,
             scale: KakaoMapPoiScale.regular,
@@ -950,6 +954,59 @@ class _MapScaleBarViewState extends State<MapScaleBarView> {
           ),
         ),
         onMapReady: (controller) => kakaoMapController = controller,
+      ),
+    );
+  }
+}
+
+class MapLayerView extends StatefulWidget {
+  const MapLayerView({super.key});
+
+  @override
+  State<StatefulWidget> createState() => _MapLayerViewState();
+}
+
+class _MapLayerViewState extends State<MapLayerView> {
+  late final KakaoMapController kakaoMapController;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("지도 레이어"),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.list),
+        onPressed: () {},
+      ),
+      body: KakaoMapView(
+        options: const KakaoMapOptions(),
+        onMapReady: (controller) async {
+          await controller.addLabelLayer(layerID: "labelLayer1");
+
+          await controller.addPoiIconStyle(
+            styleID: "style1",
+            styles: [
+              const KakaoMapPoiIconStyle(
+                symbol: "asset/pin.png",
+                height: 30,
+                width: 30,
+                anchorPoint: KakaoMapPoint(longitude: 0.5, latitude: 1),
+              ),
+            ],
+          );
+
+          await controller.addPoi(
+            layerID: "labelLayer1",
+            styleID: "style1",
+            at: const KakaoMapPoint(
+              longitude: 127.108678,
+              latitude: 37.402001,
+            ),
+          );
+
+          kakaoMapController = controller;
+        },
       ),
     );
   }

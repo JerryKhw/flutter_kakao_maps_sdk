@@ -20,6 +20,9 @@ class KakaoMapView: NSObject, FlutterPlatformView, MapControllerDelegate {
     private func viewMethodCallHandler(call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
         case "dispose": dispose(result: result)
+        case "addPoi": addPoi(arguments: call.arguments as! NSDictionary, result: result)
+        case "addPoiIconStyle": addPoiIconStyle(arguments: call.arguments as! NSDictionary, result: result)
+        case "addLabelLayer": addLabelLayer(arguments: call.arguments as! NSDictionary, result: result)
         case "moveCamera": moveCamera(arguments: call.arguments as! NSDictionary, result: result)
         case "animateCamera": animateCamera(arguments: call.arguments as! NSDictionary, result: result)
         case "moveCameraTransform": moveCameraTransform(arguments: call.arguments as! NSDictionary, result: result)
@@ -51,11 +54,114 @@ class KakaoMapView: NSObject, FlutterPlatformView, MapControllerDelegate {
         result(nil)
     }
     
+    func addPoi(arguments: NSDictionary, result: @escaping (Any?) -> ()) {
+        printLog("addPoi")
+        
+        let layerID = arguments["layerID"] as! String
+        let styleID = arguments["styleID"] as! String
+        
+        guard let mapView = self.mapView else {
+            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapView is nil", details: nil))
+            return
+        }
+        
+        let labelManager = mapView.getLabelManager()
+        
+        guard let labelLayer = labelManager.getLabelLayer(layerID: layerID) else {
+            result(FlutterError(code: "NOT_FOUND_LABEL_LAYER", message: "labelLayer is nil", details: nil))
+            return
+        }
+        
+        guard let poi = labelLayer.addPoi(option: PoiOptions(styleID: styleID), at: (arguments["at"] as! NSDictionary).toMapPoint()) else {
+            result(FlutterError(code: "FAILED_ADD", message: "failed add poi", details: nil))
+            return
+        }
+        
+        poi.show()
+        
+        result(nil)
+    }
+    
+    
+    func addPoiIconStyle(arguments: NSDictionary, result: @escaping (Any?) -> ()) {
+        printLog("addPoiIconStyle")
+        
+        let styleID = arguments["styleID"] as! String
+        let styles = (arguments["styles"] as! [NSDictionary])
+        
+        guard let mapView = self.mapView else {
+            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapView is nil", details: nil))
+            return
+        }
+        
+        let labelManager = mapView.getLabelManager()
+        
+        let poiStyles = styles.map { (style) in
+            let badges = (style["badges"] as! [NSDictionary]).map { (badge) in
+                let badgeID = style["badgeID"] as! String
+                
+                let imageNamed = badge["image"] as! String
+                let imagePath = FlutterKakaoMapsSDKPlugin.getAssetPath(named: imageNamed)
+                
+                let height = badge["height"] as! Double
+                let width = badge["width"] as! Double
+                
+                let image = UIImage.init(contentsOfFile: imagePath)?.resized(to: CGSize(width: width, height: height))
+                
+                let offset = (badge["offset"] as! NSDictionary).toCGPoint()
+                let zOrder = badge["zOrder"] as! Int
+                
+                return PoiBadge(badgeID: badgeID, image: image, offset: offset, zOrder: zOrder)
+            }
+            
+            let symbolNamed = style["symbol"] as! String
+            let symbolPath = FlutterKakaoMapsSDKPlugin.getAssetPath(named: symbolNamed)
+            
+            let height = style["height"] as! Double
+            let width = style["width"] as! Double
+            
+            let symbol = UIImage.init(contentsOfFile: symbolPath)?.resized(to: CGSize(width: width, height: height))
+            
+            let anchorPoint = (style["anchorPoint"] as! NSDictionary).toCGPoint()
+            let level = style["level"] as! Int
+            
+            let transitionType = TransitionType(rawValue: style["transitionType"] as! Int)!
+            
+            let transition = PoiTransition.init(entrance: transitionType, exit: transitionType)
+            
+            return PerLevelPoiStyle(iconStyle: PoiIconStyle(symbol: symbol, anchorPoint: anchorPoint, transition: transition, badges: badges), level: level)
+        }
+        
+        let poiStyle = PoiStyle(styleID: styleID, styles: poiStyles)
+        
+        labelManager.addPoiStyle(poiStyle)
+        
+        result(nil)
+    }
+    
+    func addLabelLayer(arguments: NSDictionary, result: @escaping (Any?) -> ()) {
+        printLog("addLabelLayer")
+        
+        guard let mapView = self.mapView else {
+            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapView is nil", details: nil))
+            return
+        }
+        
+        let labelManager = mapView.getLabelManager()
+        
+        guard let labelLayer = labelManager.addLabelLayer(option: arguments.toLabelLayerOptions()) else {
+            result(FlutterError(code: "FAILED_ADD", message: "failed add labelLayer", details: nil))
+            return
+        }
+        
+        result(nil)
+    }
+    
     func moveCamera(arguments: NSDictionary, result: @escaping (Any?) -> ()) {
         printLog("moveCamera")
         
         guard let mapView = self.mapView else {
-            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapview is nil", details: nil))
+            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapView is nil", details: nil))
             return
         }
         
@@ -96,7 +202,7 @@ class KakaoMapView: NSObject, FlutterPlatformView, MapControllerDelegate {
         printLog("animateCamera")
         
         guard let mapView = self.mapView else {
-            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapview is nil", details: nil))
+            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapView is nil", details: nil))
             return
         }
         
@@ -139,7 +245,7 @@ class KakaoMapView: NSObject, FlutterPlatformView, MapControllerDelegate {
         printLog("moveCameraTransform")
         
         guard let mapView = self.mapView else {
-            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapview is nil", details: nil))
+            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapView is nil", details: nil))
             return
         }
         
@@ -159,7 +265,7 @@ class KakaoMapView: NSObject, FlutterPlatformView, MapControllerDelegate {
         printLog("animateCameraTransform")
         
         guard let mapView = self.mapView else {
-            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapview is nil", details: nil))
+            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapView is nil", details: nil))
             return
         }
         
@@ -180,7 +286,7 @@ class KakaoMapView: NSObject, FlutterPlatformView, MapControllerDelegate {
         printLog("setViewInfo")
         
         guard let mapView = self.mapView else {
-            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapview is nil", details: nil))
+            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapView is nil", details: nil))
             return
         }
         
@@ -196,7 +302,7 @@ class KakaoMapView: NSObject, FlutterPlatformView, MapControllerDelegate {
         printLog("showOverlay")
         
         guard let mapView = self.mapView else {
-            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapview is nil", details: nil))
+            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapView is nil", details: nil))
             return
         }
         
@@ -211,7 +317,7 @@ class KakaoMapView: NSObject, FlutterPlatformView, MapControllerDelegate {
         printLog("hideOverlay")
         
         guard let mapView = self.mapView else {
-            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapview is nil", details: nil))
+            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapView is nil", details: nil))
             return
         }
         
@@ -226,7 +332,7 @@ class KakaoMapView: NSObject, FlutterPlatformView, MapControllerDelegate {
         printLog("setEnabled")
         
         guard let mapView = self.mapView else {
-            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapview is nil", details: nil))
+            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapView is nil", details: nil))
             return
         }
         
@@ -241,7 +347,7 @@ class KakaoMapView: NSObject, FlutterPlatformView, MapControllerDelegate {
         printLog("setBuildingScale")
         
         guard let mapView = self.mapView else {
-            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapview is nil", details: nil))
+            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapView is nil", details: nil))
             return
         }
         
@@ -256,7 +362,7 @@ class KakaoMapView: NSObject, FlutterPlatformView, MapControllerDelegate {
         printLog("getPadding")
         
         guard let mapView = self.mapView else {
-            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapview is nil", details: nil))
+            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapView is nil", details: nil))
             return
         }
         
@@ -269,7 +375,7 @@ class KakaoMapView: NSObject, FlutterPlatformView, MapControllerDelegate {
         printLog("setPadding")
         
         guard let mapView = self.mapView else {
-            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapview is nil", details: nil))
+            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapView is nil", details: nil))
             return
         }
         
@@ -284,7 +390,7 @@ class KakaoMapView: NSObject, FlutterPlatformView, MapControllerDelegate {
         printLog("setLogoPosition")
         
         guard let mapView = self.mapView else {
-            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapview is nil", details: nil))
+            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapView is nil", details: nil))
             return
         }
         
@@ -299,11 +405,11 @@ class KakaoMapView: NSObject, FlutterPlatformView, MapControllerDelegate {
         printLog("setPoiOptions")
         
         guard let mapView = self.mapView else {
-            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapview is nil", details: nil))
+            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapView is nil", details: nil))
             return
         }
         
-        let poiOptions = arguments.toPoiOptions()
+        let poiOptions = arguments.toKakaoMapPoiOptions()
         
         mapView.poiClickable = poiOptions.clickable
         mapView.setPoiEnabled(poiOptions.enabled)
@@ -316,7 +422,7 @@ class KakaoMapView: NSObject, FlutterPlatformView, MapControllerDelegate {
         printLog("setCompassOptions")
         
         guard let mapView = self.mapView else {
-            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapview is nil", details: nil))
+            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapView is nil", details: nil))
             return
         }
         
@@ -336,7 +442,7 @@ class KakaoMapView: NSObject, FlutterPlatformView, MapControllerDelegate {
         printLog("setScaleBarOptions")
         
         guard let mapView = self.mapView else {
-            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapview is nil", details: nil))
+            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapView is nil", details: nil))
             return
         }
         
@@ -358,7 +464,7 @@ class KakaoMapView: NSObject, FlutterPlatformView, MapControllerDelegate {
         printLog("refresh")
         
         guard let mapView = self.mapView else {
-            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapview is nil", details: nil))
+            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapView is nil", details: nil))
             return
         }
         

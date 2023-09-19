@@ -12,7 +12,7 @@ struct KakaoMapOptions {
     var buildingScale: Float = 1.0
     var padding: UIEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
     var logoPosition: KakaoMapPosition = KakaoMapPosition(alignment: .bottomRight, x: 0, y: 0)
-    var poiOptions: PoiOptions = PoiOptions(clickable: true, enabled: true, scale: PoiScaleType.regular)
+    var poiOptions: KakaoMapPoiOptions = KakaoMapPoiOptions(clickable: true, enabled: true, scale: PoiScaleType.regular)
     var compassOptions: CompassOptions = CompassOptions(enabled: false, position: KakaoMapPosition(alignment: .bottomRight, x: 0, y: 0))
     var scaleBarOptions: ScaleBarOptions = ScaleBarOptions(enabled: false, position: KakaoMapPosition(alignment: .bottomRight, x: 0, y: 0), autoDisabled: true, fadeInOutOptions: FadeInOutOptions(fadeInTime: 300, fadeOutTime: 300, retentionTime: 3000))
 }
@@ -31,7 +31,7 @@ extension NSDictionary {
             buildingScale: Float(self["buildingScale"] as! Double),
             padding: (self["padding"] as! NSDictionary).toUIEdgeInsets(),
             logoPosition: (self["logoPosition"] as! NSDictionary).toKakaoMapPosition(),
-            poiOptions: (self["poiOptions"] as! NSDictionary).toPoiOptions(),
+            poiOptions: (self["poiOptions"] as! NSDictionary).toKakaoMapPoiOptions(),
             compassOptions: (self["compassOptions"] as! NSDictionary).toCompassOptions(),
             scaleBarOptions:(self["scaleBarOptions"] as! NSDictionary).toScaleBarOptions()
         )
@@ -39,6 +39,10 @@ extension NSDictionary {
     
     func toMapPoint() -> MapPoint {
         return MapPoint(longitude: self["longitude"] as! Double, latitude: self["latitude"] as! Double)
+    }
+    
+    func toCGPoint() -> CGPoint {
+        return CGPoint(x: self["longitude"] as! Double, y: self["latitude"] as! Double)
     }
     
     func toCameraTransformDelta() -> CameraTransformDelta {
@@ -55,5 +59,9 @@ extension NSDictionary {
     
     func toFadeInOutOptions() -> FadeInOutOptions {
         return FadeInOutOptions(fadeInTime: UInt32(self["fadeInTime"] as! Int), fadeOutTime: UInt32(self["fadeOutTime"] as! Int), retentionTime: UInt32(self["retentionTime"] as! Int))
+    }
+    
+    func toLabelLayerOptions() -> LabelLayerOptions {
+        return LabelLayerOptions(layerID: self["layerID"] as! String, competitionType: CompetitionType(rawValue: (self["competitionType"] as! Int))!, competitionUnit: CompetitionUnit(rawValue: (self["competitionUnit"] as! Int))!, orderType: OrderingType(rawValue: (self["orderType"] as! Int))!, zOrder: self["zOrder"] as! Int)
     }
 }

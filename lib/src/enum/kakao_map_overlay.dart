@@ -1,18 +1,28 @@
 part of flutter_kakao_maps_sdk;
 
+/// Overlay 종류
 enum KakaoMapOverlay {
-  hillshading,
-  roadviewLine,
+  /// Hill Shading
+  hillShading,
+
+  /// 로드뷰 라인
+  roadViewLine,
+
+  /// 자전거도로
   bicycleRoad,
+
+  /// 하이브리드
   hybrid,
+
+  /// 교통정보
   trafficInfo;
 
   @override
   String toString() {
     switch (this) {
-      case KakaoMapOverlay.hillshading:
+      case KakaoMapOverlay.hillShading:
         return "hill_shading";
-      case KakaoMapOverlay.roadviewLine:
+      case KakaoMapOverlay.roadViewLine:
         return "roadview_line";
       case KakaoMapOverlay.bicycleRoad:
         return "bicycle_road";

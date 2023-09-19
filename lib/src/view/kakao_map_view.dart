@@ -1,7 +1,10 @@
 part of flutter_kakao_maps_sdk;
 
 class KakaoMapView extends StatefulWidget {
+  /// 지도 옵션
   final KakaoMapOptions options;
+
+  /// 지도 생성 후 콜백
   final void Function(KakaoMapController controller)? onMapReady;
 
   const KakaoMapView({
