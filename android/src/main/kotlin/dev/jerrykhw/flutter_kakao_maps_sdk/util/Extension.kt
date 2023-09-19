@@ -7,6 +7,10 @@ val Int.px: Int
         (this * Resources.getSystem().displayMetrics.density).toInt()
 
 
+val Double.px: Double
+    get() =
+        (this * Resources.getSystem().displayMetrics.density)
+
 val Float.px: Float
     get() =
         (this * Resources.getSystem().displayMetrics.density)
@@ -16,6 +20,9 @@ val Int.dp: Int
     get() =
         (this / Resources.getSystem().displayMetrics.density).toInt()
 
+val Double.dp: Double
+    get() =
+        (this / Resources.getSystem().displayMetrics.density)
 
 val Float.dp: Float
     get() =

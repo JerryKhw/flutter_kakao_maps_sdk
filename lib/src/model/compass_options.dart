@@ -1,7 +1,11 @@
 part of flutter_kakao_maps_sdk;
 
+/// 나침반 설정
 class CompassOptions {
+  /// 활성화 여부. 지정하지 않을 경우 기본 값은 true.
   final bool enabled;
+
+  /// 위치 및 좌표
   final KakaoMapPosition position;
 
   const CompassOptions({

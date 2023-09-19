@@ -1,3 +1,11 @@
+## 0.3.0
+
+- style: Dart Format 수정
+- chore: Andorid Dependencies 버전 업
+- feat: 에러 처리 추가
+- update: Example 코드 정리
+- feat: Label 추가
+
 ## 0.2.2
 
 - refactor: onMapReady 방식 수정

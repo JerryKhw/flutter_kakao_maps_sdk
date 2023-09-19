@@ -1,7 +1,10 @@
 part of flutter_kakao_maps_sdk;
 
 class KakaoMapView extends StatefulWidget {
+  /// 지도 옵션
   final KakaoMapOptions options;
+
+  /// 지도 생성 후 콜백
   final void Function(KakaoMapController controller)? onMapReady;
 
   const KakaoMapView({
@@ -37,7 +40,8 @@ class _KakaoMapViewState extends State<KakaoMapView> {
 
   @override
   Widget build(BuildContext context) {
-    assert(widget.options.defaultLevel < 22, "The maximum zoom level is up to 21.");
+    assert(widget.options.defaultLevel < 22,
+        "The maximum zoom level is up to 21.");
 
     const viewType = _kakaoMapViewViewId;
     final creationParams = widget.options.toMap();

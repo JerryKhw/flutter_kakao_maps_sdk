@@ -1,5 +1,5 @@
 group 'dev.jerrykhw.flutter_kakao_maps_sdk'
-version '0.2.2'
+version '0.3.0'
 
 buildscript {
     ext.kotlin_version = '1.7.10'
@@ -53,7 +53,7 @@ android {
     }
 
     dependencies {
-        implementation 'com.kakao.maps.open:android:2.5.0'
+        implementation 'com.kakao.maps.open:android:2.6.0'
         
         testImplementation 'org.jetbrains.kotlin:kotlin-test'
         testImplementation 'org.mockito:mockito-core:5.0.0'
