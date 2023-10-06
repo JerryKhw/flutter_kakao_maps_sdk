@@ -21,7 +21,9 @@ class KakaoMapView: NSObject, FlutterPlatformView, MapControllerDelegate {
         switch call.method {
         case "dispose": dispose(result: result)
         case "addPoi": addPoi(arguments: call.arguments as! NSDictionary, result: result)
+        case "removePoi": removePoi(arguments: call.arguments as! NSDictionary, result: result)
         case "addPoiIconStyle": addPoiIconStyle(arguments: call.arguments as! NSDictionary, result: result)
+        case "changePoiIconStyle": changePoiIconStyle(arguments: call.arguments as! NSDictionary, result: result)
         case "addLabelLayer": addLabelLayer(arguments: call.arguments as! NSDictionary, result: result)
         case "moveCamera": moveCamera(arguments: call.arguments as! NSDictionary, result: result)
         case "animateCamera": animateCamera(arguments: call.arguments as! NSDictionary, result: result)
@@ -79,9 +81,31 @@ class KakaoMapView: NSObject, FlutterPlatformView, MapControllerDelegate {
         
         poi.show()
         
-        result(nil)
+        result(poi.itemID)
     }
     
+    func removePoi(arguments: NSDictionary, result: @escaping (Any?) -> ()) {
+        printLog("removePoi")
+        
+        let layerID = arguments["layerID"] as! String
+        let poiID = arguments["poiID"] as! String
+        
+        guard let mapView = self.mapView else {
+            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapView is nil", details: nil))
+            return
+        }
+        
+        let labelManager = mapView.getLabelManager()
+        
+        guard let labelLayer = labelManager.getLabelLayer(layerID: layerID) else {
+            result(FlutterError(code: "NOT_FOUND_LABEL_LAYER", message: "labelLayer is nil", details: nil))
+            return
+        }
+        
+        labelLayer.removePoi(poiID: poiID)
+        
+        result(nil)
+    }
     
     func addPoiIconStyle(arguments: NSDictionary, result: @escaping (Any?) -> ()) {
         printLog("addPoiIconStyle")
@@ -135,6 +159,35 @@ class KakaoMapView: NSObject, FlutterPlatformView, MapControllerDelegate {
         let poiStyle = PoiStyle(styleID: styleID, styles: poiStyles)
         
         labelManager.addPoiStyle(poiStyle)
+        
+        result(nil)
+    }
+    
+    func changePoiIconStyle(arguments: NSDictionary, result: @escaping (Any?) -> ()) {
+        printLog("changePoiIconStyle")
+        
+        let layerID = arguments["layerID"] as! String
+        let poiID = arguments["poiID"] as! String
+        let styleID = arguments["styleID"] as! String
+        
+        guard let mapView = self.mapView else {
+            result(FlutterError(code: "NOT_FOUND_MAPVIEW", message: "mapView is nil", details: nil))
+            return
+        }
+        
+        let labelManager = mapView.getLabelManager()
+        
+        guard let labelLayer = labelManager.getLabelLayer(layerID: layerID) else {
+            result(FlutterError(code: "NOT_FOUND_LABEL_LAYER", message: "labelLayer is nil", details: nil))
+            return
+        }
+        
+        guard let poi = labelLayer.getPoi(poiID: poiID) else {
+            result(FlutterError(code: "NOT_FOUND_POI", message: "poi is nil", details: nil))
+            return
+        }
+        
+        poi.changeStyle(styleID: styleID)
         
         result(nil)
     }

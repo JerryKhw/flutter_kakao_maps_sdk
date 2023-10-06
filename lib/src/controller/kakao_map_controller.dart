@@ -27,26 +27,6 @@ class KakaoMapController {
     _viewMethodChannel.invokeMethod("dispose");
   }
 
-  /// Poi 추가
-  ///
-  /// [layerID] layer의 고유 ID
-  /// [styleID] style의 고유 ID
-  /// [at] 생성 위치
-  Future<void> addPoi({
-    required String layerID,
-    required String styleID,
-    required KakaoMapPoint at,
-  }) async {
-    await _viewMethodChannel.invokeMethod(
-      "addPoi",
-      {
-        "layerID": layerID,
-        "styleID": styleID,
-        "at": at.toMap(),
-      },
-    );
-  }
-
   /// PoiIconStyle 추가
   ///
   /// [styleID] style 아이디
@@ -71,7 +51,7 @@ class KakaoMapController {
   /// [competitionUnit] 경쟁하는 단위를 결정합니다.
   /// [orderType] competitionType이 same일 때 경쟁하는 기준이 됩니다.
   /// [zOrder] 레이어의 렌더링 우선순위를 정의합니다. 이 때 렌더링 우선순위는 레이어의 내부가 아닌 여러개의 LabelLayer간의 렌더링 우선순위를 의미합니다. 즉, zOrder가 0인 LabelLayer의 Poi는 zOrder가 1인 LabelLayer에 속한 Poi보다 뒤에 그려집니다.
-  Future<void> addLabelLayer({
+  Future<KakaoMapLabelLayer> addLabelLayer({
     required String layerID,
     KakaoMapCompetitionType competitionType = KakaoMapCompetitionType.none,
     KakaoMapCompetitionUnit competitionUnit = KakaoMapCompetitionUnit.poi,
@@ -88,6 +68,8 @@ class KakaoMapController {
         "zOrder": zOrder,
       },
     );
+
+    return KakaoMapLabelLayer(layerID, _viewMethodChannel);
   }
 
   /// 카메라 이동

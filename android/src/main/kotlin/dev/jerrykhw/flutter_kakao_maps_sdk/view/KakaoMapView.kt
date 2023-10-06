@@ -57,7 +57,9 @@ internal class KakaoMapView(
         when (call.method) {
             "dispose" -> dispose(result)
             "addPoi" -> addPoi(call.arguments as JSONObject, result)
+            "removePoi" -> removePoi(call.arguments as JSONObject, result)
             "addPoiIconStyle" -> addPoiIconStyle(call.arguments as JSONObject, result)
+            "changePoiIconStyle" -> changePoiIconStyle(call.arguments as JSONObject, result)
             "addLabelLayer" -> addLabelLayer(call.arguments as JSONObject, result)
             "moveCamera" -> moveCamera(call.arguments as JSONObject, result)
             "animateCamera" -> animateCamera(call.arguments as JSONObject, result)
@@ -65,7 +67,6 @@ internal class KakaoMapView(
             "animateCameraTransform" -> animateCameraTransform(
                 call.arguments as JSONObject, result
             )
-
             "setViewInfo" -> setViewInfo(call.arguments as JSONObject, result)
             "showOverlay" -> showOverlay(call.arguments as JSONObject, result)
             "hideOverlay" -> hideOverlay(call.arguments as JSONObject, result)
@@ -115,10 +116,30 @@ internal class KakaoMapView(
             styles = labelStyles
         }
 
-        labelLayer.addLabel(labelOptions) ?: run {
+        val poi = labelLayer.addLabel(labelOptions) ?: run {
             result.error("FAILED_ADD", "failed add poi", null)
             return
         }
+
+        result.success(poi.labelId)
+    }
+
+    private fun removePoi(arguments: JSONObject, result: MethodChannel.Result) {
+        printLog("removePoi")
+
+        val mapView = mapView ?: run {
+            result.error("NOT_FOUND_MAPVIEW", "mapView is null", null)
+            return
+        }
+
+        val labelManager = mapView.labelManager ?: run {
+            result.error("NOT_FOUND_LABEL_MANAGER", "labelManager is null", null)
+            return
+        }
+
+        val labelLayer = labelManager.getLayer(arguments.getString("layerID"))
+
+        labelLayer.remove(labelLayer.getLabel(arguments.getString("poiID")))
 
         result.success(null)
     }
@@ -169,6 +190,31 @@ internal class KakaoMapView(
                 styleID, labelStyles
             )
         )
+
+        result.success(null)
+    }
+
+    private fun changePoiIconStyle(arguments: JSONObject, result: MethodChannel.Result) {
+        printLog("changePoiIconStyle")
+
+        val mapView = mapView ?: run {
+            result.error("NOT_FOUND_MAPVIEW", "mapView is null", null)
+            return
+        }
+
+        val labelManager = mapView.labelManager ?: run {
+            result.error("NOT_FOUND_LABEL_MANAGER", "labelManager is null", null)
+            return
+        }
+
+        val labelLayer = labelManager.getLayer(arguments.getString("layerID"))
+
+        val poi = labelLayer.getLabel(arguments.getString("poiID")) ?: run {
+            result.error("NOT_FOUND_POI", "poi is null", null)
+            return
+        }
+
+        poi.changeStyles(labelManager.getLabelStyles(arguments.getString("styleID")))
 
         result.success(null)
     }

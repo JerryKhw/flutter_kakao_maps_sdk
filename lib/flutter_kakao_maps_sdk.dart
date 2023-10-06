@@ -40,6 +40,8 @@ part 'src/model/camera_animation_options.dart';
 part 'src/model/kakao_map_options.dart';
 part 'src/model/kakao_map_poi_icon_style.dart';
 part 'src/model/kakao_map_badge.dart';
+part 'src/model/kakao_map_label_layer.dart';
+part 'src/model/kakao_map_poi.dart';
 
 // View
 part 'src/view/kakao_map_view.dart';

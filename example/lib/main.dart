@@ -968,6 +968,8 @@ class MapLayerView extends StatefulWidget {
 
 class _MapLayerViewState extends State<MapLayerView> {
   late final KakaoMapController kakaoMapController;
+  late final KakaoMapLabelLayer labelLayer;
+  late final KakaoMapPoi poi;
 
   @override
   Widget build(BuildContext context) {
@@ -977,27 +979,64 @@ class _MapLayerViewState extends State<MapLayerView> {
       ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.list),
-        onPressed: () {},
+        onPressed: () {
+          showCupertinoModalPopup(
+            context: context,
+            builder: (context) => CupertinoActionSheet(
+              actions: [
+                CupertinoActionSheetAction(
+                  onPressed: () async {
+                    await poi.changePoiIconStyle(
+                      styleID: "style1",
+                    );
+                    if (context.mounted) Navigator.pop(context);
+                  },
+                  child: const Text("STYLE1"),
+                ),
+                CupertinoActionSheetAction(
+                  onPressed: () async {
+                    await poi.changePoiIconStyle(
+                      styleID: "style2",
+                    );
+                    if (context.mounted) Navigator.pop(context);
+                  },
+                  child: const Text("STYLE2"),
+                ),
+              ],
+            ),
+          );
+        },
       ),
       body: KakaoMapView(
         options: const KakaoMapOptions(),
         onMapReady: (controller) async {
-          await controller.addLabelLayer(layerID: "labelLayer1");
+          labelLayer = await controller.addLabelLayer(layerID: "labelLayer1");
 
           await controller.addPoiIconStyle(
             styleID: "style1",
             styles: [
               const KakaoMapPoiIconStyle(
                 symbol: "asset/pin.png",
-                height: 30,
-                width: 30,
+                height: 10,
+                width: 10,
                 anchorPoint: KakaoMapPoint(longitude: 0.5, latitude: 1),
               ),
             ],
           );
 
-          await controller.addPoi(
-            layerID: "labelLayer1",
+          await controller.addPoiIconStyle(
+            styleID: "style2",
+            styles: [
+              const KakaoMapPoiIconStyle(
+                symbol: "asset/pin.png",
+                height: 20,
+                width: 20,
+                anchorPoint: KakaoMapPoint(longitude: 0.5, latitude: 1),
+              ),
+            ],
+          );
+
+          poi = await labelLayer.addPoi(
             styleID: "style1",
             at: const KakaoMapPoint(
               longitude: 127.108678,
