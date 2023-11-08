@@ -15,6 +15,7 @@ import com.kakao.vectormap.MapView
 import com.kakao.vectormap.MapViewInfo
 import com.kakao.vectormap.camera.CameraPosition
 import com.kakao.vectormap.camera.CameraUpdateFactory
+import com.kakao.vectormap.label.BadgeOptions
 import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.label.LabelStyle
 import com.kakao.vectormap.label.LabelStyles
@@ -67,6 +68,7 @@ internal class KakaoMapView(
             "animateCameraTransform" -> animateCameraTransform(
                 call.arguments as JSONObject, result
             )
+
             "setViewInfo" -> setViewInfo(call.arguments as JSONObject, result)
             "showOverlay" -> showOverlay(call.arguments as JSONObject, result)
             "hideOverlay" -> hideOverlay(call.arguments as JSONObject, result)
@@ -162,8 +164,35 @@ internal class KakaoMapView(
         val styleID = arguments.getString("styleID")
         val styles = arguments.getJSONArray("styles")
 
-        for (i in 0 until styles.length()) {
-            val style = styles.getJSONObject(i)
+        for (styleIndex in 0 until styles.length()) {
+            val style = styles.getJSONObject(styleIndex)
+
+            val badgesJsonArray = style.getJSONArray("badges")
+
+            val badges: MutableList<BadgeOptions> = mutableListOf()
+            for (badgeIndex in 0 until badgesJsonArray.length()) {
+                val badgeJsonObject = badgesJsonArray.getJSONObject(badgeIndex)
+
+                val inputStream = FlutterKakaoMapsSDKPlugin.getAsset(badgeJsonObject.getString("image"))
+                val bitmap = Bitmap.createScaledBitmap(
+                    BitmapFactory.decodeStream(inputStream),
+                    badgeJsonObject.getDouble("height").px.toInt(),
+                    badgeJsonObject.getDouble("width").px.toInt(),
+                    true
+                )
+
+                val badge = BadgeOptions.from(bitmap).apply {
+                    id = badgeJsonObject.getString("badgeID")
+
+                    val offset = badgeJsonObject.getJSONObject("offset").toLatLng()
+                    setOffset(offset.longitude.toFloat(), offset.latitude.toFloat())
+
+                    val zOrder = badgeJsonObject.getInt("zOrder")
+                    setZOrder(zOrder)
+                }
+
+                badges.add(badge)
+            }
 
             val inputStream = FlutterKakaoMapsSDKPlugin.getAsset(style.getString("symbol"))
             val bitmap = Bitmap.createScaledBitmap(
@@ -180,6 +209,8 @@ internal class KakaoMapView(
                 val transition = Transition.getEnum(style.getInt("transitionType"))
 
                 iconTransition = LabelTransition.from(transition, transition)
+
+                setBadges(*badges.toTypedArray())
             }
 
             labelStyles.add(labelStyle)
